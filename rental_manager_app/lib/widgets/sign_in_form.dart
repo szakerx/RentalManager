@@ -85,7 +85,7 @@ class SigningFormState extends State<SigningForm> {
                   ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
-                          widget.buttonFunction(emailController.text, passwordController.text);
+                          widget.buttonFunction(emailController.text, passwordController.text, context);
                         }
                       },
                       child: Text(widget.buttonText)),

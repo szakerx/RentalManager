@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:rental_manager_app/widgets/calendar.dart';
+import 'package:table_calendar/table_calendar.dart';
+
 
 class HomePage extends StatelessWidget {
 
@@ -30,6 +33,7 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+      body: Calendar(),
     );
   }
 }
