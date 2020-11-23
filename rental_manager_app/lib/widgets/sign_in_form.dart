@@ -56,7 +56,8 @@ class SigningFormState extends State<SigningForm> {
         key: _formKey,
         child: Column(
                 children: <Widget>[
-                  Text(widget.titleText),
+                  Text(widget.titleText,
+                  style: Theme.of(context).textTheme.headline1,),
                   Padding(padding: EdgeInsets.only(top: 15.0)),
                   TextFormField(
                     controller: emailController,

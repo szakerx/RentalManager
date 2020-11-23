@@ -25,8 +25,13 @@ dependencies:
     sdk: flutter
   firebase_core: "^0.5.2"
   firebase_auth: "^0.18.3"
+  # Calendar
   table_calendar: ^2.3.0
+  # Locales
   intl: ^0.16.1
+  # Fonts
+  google_fonts: ^1.1.1
+
 
 
   # The following adds the Cupertino Icons font to your application.
