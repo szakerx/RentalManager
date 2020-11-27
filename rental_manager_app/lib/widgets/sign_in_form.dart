@@ -30,8 +30,6 @@ class SigningForm extends StatefulWidget {
         this.redirectText = "Masz już konto?";
         this.redirectButtonText = "Zaloguj się";
         break;
-      default:
-        print("DUPA BLADA");
     }
   }
 
