@@ -45,7 +45,7 @@ class MenuItemsState extends State<MenuItems> {
             ),
           ),
           decoration: BoxDecoration(
-            color: CustomColors.lightOrange,
+            color: CustomColors.lightGreen,
           ),
         ),
         Expanded(
@@ -65,7 +65,11 @@ class MenuItemsState extends State<MenuItems> {
                     }
                   },
                   child: Container(
-                    color: widget.isHighlighted[index] ? CustomColors.darkestOrange : CustomColors.white,
+                    decoration: BoxDecoration(
+                      color: widget.isHighlighted[index] ? CustomColors.darkGreen : CustomColors.white,
+                      borderRadius: BorderRadius.only(topRight: Radius.circular(50.0))
+                    ),
+                    margin: EdgeInsets.only(right: 20.0),
                     child: ListTile(                                     //the item
                       title: TextWithIcon(text: widget.items[index], icon: widget.icons[index], color: widget.isHighlighted[index] ? CustomColors.white : CustomColors.darkBlack),
                     ),

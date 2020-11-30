@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: CustomColors.color,
-        primaryColor: CustomColors.lightGreen,
+        primaryColor: CustomColors.green,
         primaryColorLight: CustomColors.lightBlue,
         primaryColorDark: CustomColors.darkBlue,
         accentColor: CustomColors.lightOrange,
@@ -31,10 +31,10 @@ class MyApp extends StatelessWidget {
         errorColor: CustomColors.darkOrange,
         fontFamily: GoogleFonts.raleway().fontFamily,
         textTheme: TextTheme(
-          bodyText1: GoogleFonts.raleway(),
+          bodyText1: GoogleFonts.raleway(fontSize: 15.0),
           headline1: GoogleFonts.pacifico(
             fontSize: 40.0,
-            color: CustomColors.lightGreen,
+            color: CustomColors.green,
           ),
         )
       ),
