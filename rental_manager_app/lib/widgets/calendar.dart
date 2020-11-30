@@ -3,7 +3,7 @@ import 'package:rental_manager_app/model/holidays.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Calendar extends StatelessWidget {
-  CalendarController _calendarController = CalendarController();
+  final CalendarController _calendarController = CalendarController();
 
   @override
   Widget build(BuildContext context) {
