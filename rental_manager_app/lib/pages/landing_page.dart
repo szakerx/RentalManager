@@ -15,6 +15,7 @@ class LandingPage extends StatelessWidget {
           if (user == null) {
             return SignInPage("login");
           }
+          print("User UID: ${user.uid}");
           return HomePage();
         } else {
           return Scaffold(

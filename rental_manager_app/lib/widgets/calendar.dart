@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager_app/model/holidays.dart';
+import 'package:rental_manager_app/model/remote.dart';
 import 'package:rental_manager_app/widgets/calendar_reservation_items.dart';
 import 'package:rental_manager_app/widgets/custom_colors.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -18,6 +19,7 @@ class Calendar extends StatefulWidget {
 class CalendarState extends State<Calendar> {
   CalendarController _calendarController = CalendarController();
 
+  var dupa;
   DateTime _selectedDay = DateTime.now();
 
   void _setSelectedDay() {
@@ -26,7 +28,7 @@ class CalendarState extends State<Calendar> {
     });
   }
 
-  String formatedDate(DateTime date)  {
+  String formattedDate(DateTime date)  {
     DateFormat format = DateFormat('dd MMMM yyyy');
     return format.format(date);
   }
@@ -109,14 +111,13 @@ class CalendarState extends State<Calendar> {
                       color: CustomColors.lightGreen,
                     ),
                     child: Column(
-
                       children: [
                         Align(
                           alignment: Alignment.topLeft,
                           child: Container(
                             padding: EdgeInsets.all(20.0),
-                            child: Text(formatedDate(_selectedDay),
-                              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 35.0),
+                            child: Text(formattedDate(_selectedDay),
+                              style: Theme.of(context).textTheme.bodyText1.copyWith(fontSize: 30.0),
                             ),
                           ),
                         ),
