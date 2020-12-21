@@ -24,7 +24,7 @@ class MessageSchemesListState extends State<MessageSchemesList> {
   @override
   void initState() {
     super.initState();
-    messageSchemes = Remote.fetchMessageSchemes();
+    messageSchemes = Remote.getMessageSchemes();
   }
 
   @override
@@ -67,7 +67,7 @@ class MessageSchemesListState extends State<MessageSchemesList> {
                       onPressed: (){
                         //TODO usunac z bazy
                         setState(() {
-                          messageSchemes = Remote.fetchMessageSchemes();
+                          messageSchemes = Remote.getMessageSchemes();
                         });
                       },
                     ),
