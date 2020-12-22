@@ -10,7 +10,6 @@ import 'message_scheme_page.dart';
 
 class MessageSchemesList extends StatefulWidget {
 
-
   @override
   State<StatefulWidget> createState() {
     return MessageSchemesListState();

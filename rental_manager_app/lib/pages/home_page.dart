@@ -17,13 +17,7 @@ class HomePage extends StatelessWidget {
         title: Text('Home Page'),
         actions: <Widget>[
           FlatButton(
-            child: Text(
-              'Filtrowanie',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.white,
-              ),
-            ),
+            child: Icon(Icons.filter_alt),
             onPressed: () {
               //TODO filtrowanie
               print("Filtruj");

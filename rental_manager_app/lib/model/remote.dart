@@ -39,6 +39,9 @@ class Remote  {
     //   print(response.statusCode);
     //   throw Exception('Failed to get holiday');
     // }
+    if (day == 1) {
+      return [];
+    }
     return [
       Holiday(name: "Holiday 3"),
       Holiday(name: "Holiday 4"),
@@ -116,26 +119,26 @@ class Remote  {
   }
 
   static Future<List<MessageScheme>> getMessageSchemes() async {
-    List<MessageScheme> messageSchemes = List();
-
-    var queryParams = {
-      "userID": "XOG4xKvuOBbacoZn6LFASrHHJeJ2",
-    };
-    var uri = Uri.http(serverUri, "/schemes", queryParams);
-
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      List body = jsonDecode(response.body);
-      for (var i = 0; i < body.length; i++) {
-        messageSchemes.add(MessageScheme.fromJson(body[i]));
-      }
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
-    }
-    return messageSchemes;
+    // List<MessageScheme> messageSchemes = List();
+    //
+    // var queryParams = {
+    //   "userID": "XOG4xKvuOBbacoZn6LFASrHHJeJ2",
+    // };
+    // var uri = Uri.http(serverUri, "/schemes", queryParams);
+    //
+    // final response = await http.get(uri);
+    //
+    // if (response.statusCode == 200) {
+    //   List body = jsonDecode(response.body);
+    //   for (var i = 0; i < body.length; i++) {
+    //     messageSchemes.add(MessageScheme.fromJson(body[i]));
+    //   }
+    // } else {
+    //   // If the server did not return a 200 OK response,
+    //   // then throw an exception.
+    //   throw Exception('Failed to load album');
+    // }
+    // return messageSchemes;
     return [
       MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
       MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),

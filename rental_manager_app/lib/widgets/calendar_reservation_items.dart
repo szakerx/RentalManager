@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager_app/model/holiday.dart';
 import 'package:rental_manager_app/model/remote.dart';
-
 import 'custom_colors.dart';
 
 class CalendarReservationItems extends StatefulWidget {
@@ -27,6 +26,12 @@ class CalendarReservationItemsState extends State<CalendarReservationItems> {
     super.initState();
     reservations = Remote.fetchHoliday(2020, 12, 25);
     print(widget.holidays);
+  }
+
+  @override
+  void didUpdateWidget(Widget oldWidget) {
+    super.didUpdateWidget(context.widget);
+    reservations = Remote.fetchHoliday(2020, 12, 1);
   }
 
   @override

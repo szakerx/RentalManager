@@ -1,18 +1,18 @@
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rental_manager_app/pages/guests_list_page.dart';
 import 'package:rental_manager_app/pages/home_page.dart';
 import 'package:rental_manager_app/pages/message_schemes_list_page.dart';
-import 'package:rental_manager_app/widgets/side_menu_state.dart';
+import 'package:rental_manager_app/pages/rental_objects_list_page.dart';
+import 'package:rental_manager_app/pages/reservations_list_page.dart';
 import 'package:rental_manager_app/widgets/text_with_icon.dart';
 
 import 'custom_colors.dart';
 
 class MenuItems extends StatefulWidget {
-  final items = ["Kalendarz", "Obiekty", "Goście", "Powiadomienia"];
-  final icons = [Icons.calendar_today, Icons.home, Icons.person, Icons.message];
+  final items = ["Kalendarz", "Obiekty", "Goście", "Rezerwacje", "Powiadomienia"];
+  final icons = [Icons.calendar_today, Icons.home, Icons.person, Icons.bookmark_outline, Icons.message];
 
   @override
   State<StatefulWidget> createState() {
@@ -36,10 +36,13 @@ class MenuItemsState extends State<MenuItems> {
         page = HomePage();
         break;
       case "Obiekty":
-        page = HomePage(); //TODO zmienic
+        page = RentalObjectsListPage(); //TODO zmienic
         break;
       case "Goście":
-        page = HomePage(); //TODO zmienic
+        page = GuestsListPage(); //TODO zmienic
+        break;
+      case "Rezerwacje":
+        page = ReservationsListPage(); //TODO zmienic
         break;
       case "Powiadomienia":
         page = MessageSchemesList();
@@ -115,3 +118,6 @@ class MenuItemsState extends State<MenuItems> {
   }
 }
 
+class SideMenuState {
+  static var isHighlighted = [true, false, false, false, false];
+}
