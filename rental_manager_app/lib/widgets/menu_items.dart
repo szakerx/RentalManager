@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager_app/pages/home_page.dart';
-import 'package:rental_manager_app/pages/message_schemes_list.dart';
+import 'package:rental_manager_app/pages/message_schemes_list_page.dart';
 import 'package:rental_manager_app/widgets/side_menu_state.dart';
 import 'package:rental_manager_app/widgets/text_with_icon.dart';
 

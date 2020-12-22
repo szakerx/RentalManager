@@ -136,7 +136,10 @@ class CalendarState extends State<Calendar> {
                               ),
                             ),
                             Divider(height: 1, thickness: 1, color: CustomColors.white),
-                            Expanded(child: CalendarReservationItems(snapshot.data[_selectedDay]))
+                            Expanded(child: CalendarReservationItems([
+                              Holiday(name: "Holiday 3"),
+                              Holiday(name: "Holiday 4"),
+                            ],))
                           ],
                         )
                     )

@@ -10,35 +10,42 @@ class Remote  {
   static String serverUri = '192.168.0.141/';
 
   static Future<List<Holiday>> fetchHoliday(int year, int month, int day) async {
-    String apiKey = "eb42b5ffff294f61b59cfb7b339c1c34";
-    String country = "PL";
-
-    var queryParams = {
-      "api_key": apiKey,
-      "country": country,
-      "year": year.toString(),
-      "month": month.toString(),
-      "day": day.toString(),
-    };
-
-    var uri = Uri.https("holidays.abstractapi.com", "/v1", queryParams);
-
-    final response = await http.get("$uri");
-    if (response.statusCode == 200) {
-
-      List body = json.decode(response.body);
-      List<Holiday> holidays = List();
-      for (var i = 0; i < body.length; i++) {
-        var holiday = Holiday.fromJson(body[i]);
-        holidays.add(holiday);
-      }
-
-      return holidays;
-    } else {
-      print(response.body);
-      print(response.statusCode);
-      throw Exception('Failed to get holiday');
-    }
+    // String apiKey = "eb42b5ffff294f61b59cfb7b339c1c34";
+    // String country = "PL";
+    //
+    // var queryParams = {
+    //   "api_key": apiKey,
+    //   "country": country,
+    //   "year": year.toString(),
+    //   "month": month.toString(),
+    //   "day": day.toString(),
+    // };
+    //
+    // var uri = Uri.https("holidays.abstractapi.com", "/v1", queryParams);
+    //
+    // final response = await http.get("$uri");
+    // if (response.statusCode == 200) {
+    //
+    //   List body = json.decode(response.body);
+    //   List<Holiday> holidays = List();
+    //   for (var i = 0; i < body.length; i++) {
+    //     var holiday = Holiday.fromJson(body[i]);
+    //     holidays.add(holiday);
+    //   }
+    //
+    //   return holidays;
+    // } else {
+    //   print(response.body);
+    //   print(response.statusCode);
+    //   throw Exception('Failed to get holiday');
+    // }
+    return [
+      Holiday(name: "Holiday 3"),
+      Holiday(name: "Holiday 4"),
+      Holiday(name: "Holiday 4"),
+      Holiday(name: "Holiday 4"),
+      Holiday(name: "Holiday 4"),
+    ];
   }
 
   static Future<Map<DateTime, List<Holiday>>> getHolidaysInRange(DateTime start, DateTime end) async {
