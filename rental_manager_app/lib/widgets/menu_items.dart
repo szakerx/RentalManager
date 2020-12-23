@@ -1,16 +1,18 @@
-
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rental_manager_app/pages/guests_list_page.dart';
+import 'package:rental_manager_app/pages/home_page.dart';
+import 'package:rental_manager_app/pages/message_schemes_list_page.dart';
+import 'package:rental_manager_app/pages/rental_objects_list_page.dart';
+import 'package:rental_manager_app/pages/reservations_list_page.dart';
 import 'package:rental_manager_app/widgets/text_with_icon.dart';
 
 import 'custom_colors.dart';
 
 class MenuItems extends StatefulWidget {
-  final items = ["Kalendarz", "Obiekty", "Goście", "Powiadomienia"];
-  final icons = [Icons.calendar_today, Icons.home, Icons.person, Icons.message];
-  var isHighlighted = [true, false, false, false];
+  final items = ["Kalendarz", "Obiekty", "Goście", "Rezerwacje", "Powiadomienia"];
+  final icons = [Icons.calendar_today, Icons.home, Icons.person, Icons.bookmark_outline, Icons.message];
 
   @override
   State<StatefulWidget> createState() {
@@ -25,6 +27,28 @@ class MenuItemsState extends State<MenuItems> {
     } catch (e) {
       print(e); // TODO: show dialog with error
     }
+  }
+
+  void goToPage(String pageName) {
+    Widget page;
+    switch (pageName) {
+      case "Kalendarz":
+        page = HomePage();
+        break;
+      case "Obiekty":
+        page = RentalObjectsListPage(); //TODO zmienic
+        break;
+      case "Goście":
+        page = GuestsListPage(); //TODO zmienic
+        break;
+      case "Rezerwacje":
+        page = ReservationsListPage(); //TODO zmienic
+        break;
+      case "Powiadomienia":
+        page = MessageSchemesList();
+        break;
+    }
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => page));
   }
 
   @override
@@ -54,24 +78,25 @@ class MenuItemsState extends State<MenuItems> {
               itemBuilder: (_, index){
                 return InkWell(
                   onTap: (){
-                    for(int i = 0; i < widget.isHighlighted.length; i++){
+                    for(int i = 0; i < SideMenuState.isHighlighted.length; i++){
                       setState(() {
                         if (index == i) {
-                          widget.isHighlighted[index] = true;
-                        } else {                               //the condition to change the highlighted item
-                          widget.isHighlighted[i] = false;
+                          SideMenuState.isHighlighted[index] = true;
+                        } else {
+                          SideMenuState.isHighlighted[i] = false;
                         }
                       });
                     }
+                    goToPage(widget.items[index]);
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      color: widget.isHighlighted[index] ? CustomColors.darkGreen : CustomColors.white,
+                      color: SideMenuState.isHighlighted[index] ? CustomColors.darkGreen : CustomColors.white,
                       borderRadius: BorderRadius.only(topRight: Radius.circular(50.0))
                     ),
                     margin: EdgeInsets.only(right: 20.0),
-                    child: ListTile(                                     //the item
-                      title: TextWithIcon(text: widget.items[index], icon: widget.icons[index], color: widget.isHighlighted[index] ? CustomColors.white : CustomColors.darkBlack),
+                    child: ListTile(
+                      title: TextWithIcon(text: widget.items[index], icon: widget.icons[index], color: SideMenuState.isHighlighted[index] ? CustomColors.white : CustomColors.darkBlack),
                     ),
                   ),
                 );
@@ -93,3 +118,6 @@ class MenuItemsState extends State<MenuItems> {
   }
 }
 
+class SideMenuState {
+  static var isHighlighted = [true, false, false, false, false];
+}

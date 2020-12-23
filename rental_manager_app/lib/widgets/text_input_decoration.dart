@@ -8,6 +8,7 @@ class TextInputDecoration {
 
   InputDecoration getInputDecoration() {
     return InputDecoration(
+      alignLabelWithHint: true,
       labelText: labelText,
       fillColor: Colors.white,
       border: new OutlineInputBorder(
