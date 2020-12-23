@@ -7,5 +7,10 @@ import pl.monochrome.manager.repository.PersonRepository
 
 @Service
 class PersonService @Autowired constructor(private val repository: PersonRepository) {
+
+    fun getPerson(personId: Int) = repository.findById(personId).get()
+
     fun addPerson(person: Person) = repository.save(person)
+
+
 }

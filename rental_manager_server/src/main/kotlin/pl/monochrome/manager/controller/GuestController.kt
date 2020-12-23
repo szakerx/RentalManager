@@ -10,9 +10,9 @@ import java.util.*
 class GuestController @Autowired constructor(private val service: GuestService) {
 
     @GetMapping
-    fun getGuests(@RequestParam id: UUID) = service.getAllGuests(id)
+    fun getGuests(@RequestParam id: String) = service.getAllGuests(id)
 
     @GetMapping("/{id}")
-    fun getGuest(@RequestParam("userId")userId: UUID, @PathVariable("id")id: UUID) = service.getGuest(userId, id)
+    fun getGuest(@RequestParam("userId")userId: String, @PathVariable("id")id: Int) = service.getGuest(userId, id)
 
 }

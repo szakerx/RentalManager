@@ -10,7 +10,7 @@ import java.util.*
 
 @Service
 class GuestService @Autowired constructor(private val repository: GuestRepository) {
-    fun getAllGuests(userId: UUID): List<Guest> = repository.findByUser_Id(userId)
+    fun getAllGuests(userId: String): List<Guest> = repository.findByUser_Id(userId)
 
-    fun getGuest(userId: UUID, guestId: UUID) = repository.findByIdOrNull(UserGuestKey(userId, guestId))
+    fun getGuest(userId: String, guestId: Int) = repository.findByIdOrNull(UserGuestKey(userId, guestId))
 }

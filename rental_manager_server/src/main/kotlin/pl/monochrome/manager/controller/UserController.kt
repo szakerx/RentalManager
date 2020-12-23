@@ -18,17 +18,16 @@ class UserController @Autowired constructor(private val service: UserService) {
     @GetMapping
     fun getAllUsers(): List<User> = service.getAllUsers()
 
-    @GetMapping("/new")
-    @Transactional
-    fun addRandomUser(): ResponseEntity<String> {
-        service.add(User())
-        return ResponseEntity(HttpStatus.OK)
-    }
-
     @DeleteMapping("/deleteAll")
     fun deleteAllUsers(): ResponseEntity<String> {
         service.deleteAllUsers()
         return ResponseEntity(HttpStatus.OK)
+    }
+
+    @PostMapping
+    fun addUser(@RequestBody user: User): ResponseEntity<User> {
+        val newUser = service.add(user)
+        return ResponseEntity.ok(newUser)
     }
 
 }

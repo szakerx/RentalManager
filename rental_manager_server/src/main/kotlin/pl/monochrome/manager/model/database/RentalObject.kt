@@ -1,33 +1,40 @@
 package pl.monochrome.manager.model.database
 
-import pl.monochrome.manager.model.custom.ObjectType
-import java.util.*
+import org.hibernate.annotations.Type
+import org.hibernate.annotations.TypeDef
+import pl.monochrome.manager.model.enums.PostgresqlEnumType
+import pl.monochrome.manager.model.enums.ObjectType
 import javax.persistence.*
 
 @Entity
+@TypeDef(
+    name = "pgsql_enum",
+    typeClass = PostgresqlEnumType::class
+)
 @Table(name = "Rental_objects")
 data class RentalObject(
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        val id: UUID = UUID.randomUUID(),
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Int,
 
-        @Column //(name = "max_guests")
-        val maxGuests: Int = -1,
+    @Column //(name = "max_guests")
+    val maxGuest: Int,
 
-        @Column
-        val description: String? = null,
+    @Column
+    val description: String,
 
-        @Column
-        val name: String = "default",
+    @Column
+    val name: String,
 
-        @Column
-        @Enumerated(EnumType.STRING)
-        val type: ObjectType = ObjectType.HOUSE,
+    @Column
+    @Enumerated(EnumType.STRING)
+    @Type(type = "pgsql_enum")
+    val type: ObjectType,
 
-        @Column //(name = "allowed_animals")
-        val allowedAnimals: Boolean = false,
+    @Column //(name = "allowed_animals")
+    val allowedAnimals: Boolean,
 
-        @ManyToOne
-        val user: User?
+    @ManyToOne
+    val user: User?
 )

@@ -16,5 +16,5 @@ class UserService @Autowired constructor(private val repository: UserRepository)
 
     fun add(user: User) = repository.save(user)
 
-    fun findUser(userId: UUID) = repository.findById(userId)
+    fun getUser(userId: String) = repository.findById(userId).get()
 }

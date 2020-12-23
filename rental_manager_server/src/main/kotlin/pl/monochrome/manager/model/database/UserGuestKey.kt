@@ -1,7 +1,6 @@
 package pl.monochrome.manager.model.database
 
 import java.io.Serializable
-import java.util.*
 import javax.persistence.Column
 import javax.persistence.Embeddable
 
@@ -9,8 +8,9 @@ import javax.persistence.Embeddable
 data class UserGuestKey(
 
         @Column(name = "user_id")
-        val userId: UUID,
+        val userId: String,
 
         @Column(name = "guest_id")
-        val guestId: UUID,
+        val guestId: Int,
+
 ): Serializable
