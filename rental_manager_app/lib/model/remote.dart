@@ -114,7 +114,6 @@ class Remote  {
         Holiday(name: "Holiday 24")
       ],
     };
-    print("returning");
     return holidays;
   }
 
@@ -140,6 +139,9 @@ class Remote  {
     // }
     // return messageSchemes;
     return [
+      MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
+      MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
+      MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
       MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
       MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
       MessageScheme("2","text2","Nazwa2")];
