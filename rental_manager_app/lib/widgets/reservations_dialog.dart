@@ -4,13 +4,12 @@ import 'package:rental_manager_app/model/reservation.dart';
 
 import 'custom_colors.dart';
 
-class ReservationsSnackBar extends StatelessWidget {
+class ReservationsDialog extends StatelessWidget {
 
   String start;
   String end;
 
-  ReservationsSnackBar(this.start, this.end);
-
+  ReservationsDialog(this.start, this.end);
 
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager_app/model/message_scheme.dart';
 import 'package:rental_manager_app/model/remote.dart';
-import 'package:rental_manager_app/widgets/reservations_snack_bar.dart';
+import 'package:rental_manager_app/widgets/reservations_dialog.dart';
 import 'package:rental_manager_app/widgets/text_input_decoration.dart';
 
 import 'calendar.dart';
@@ -85,7 +85,7 @@ class FiltersMenuDrawerState extends State<FiltersMenuDrawer> {
   void initState() {
     super.initState();
     _reservations = Remote.getMessageSchemes().then((value) {
-      _checkedRentalObject = value.first.id;
+      _checkedRentalObject = value.first.id.toString();
       return value;
     });
   }
@@ -223,7 +223,7 @@ class FiltersMenuDrawerState extends State<FiltersMenuDrawer> {
                             //TODO idź do daty
                             showDialog(context: context,
                               builder: (context) {
-                               return ReservationsSnackBar(_sinceDateController.text, _untilDateController.text);
+                               return ReservationsDialog(_sinceDateController.text, _untilDateController.text);
                               });
                           } else {
                             setState(() {
