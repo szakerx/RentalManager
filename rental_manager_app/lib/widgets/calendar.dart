@@ -10,9 +10,15 @@ import 'package:intl/intl.dart';
 
 
 class Calendar extends StatefulWidget {
+
+  CalendarState calendarState = CalendarState();
+
+  void setSelectedDay(DateTime data) {
+    calendarState.setSelectedDay(data);
+  }
   @override
   State<StatefulWidget> createState() {
-    return CalendarState();
+    return calendarState;
   }
 }
 
@@ -26,6 +32,12 @@ class CalendarState extends State<Calendar> {
     super.initState();
     _selectedDay = DateTime.now();
     _holidays = Remote.getHolidaysInRange(DateTime(_selectedDay.year, _selectedDay.month, 1), DateTime(_selectedDay.year, _selectedDay.month + 1, 0));
+  }
+
+  void setSelectedDay(DateTime data) {
+    setState(() {
+      _selectedDay = data;
+    });
   }
 
   void _setSelectedDay() {
