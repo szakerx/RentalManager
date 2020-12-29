@@ -1,4 +1,4 @@
-package pl.monochrome.manager.service
+package pl.monochrome.manager.service.db
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -36,7 +36,7 @@ class ReservationService @Autowired constructor(
     private fun dtoToObject(reservationDto: ReservationDto): Reservation {
         val person = personService.getPerson(reservationDto.personId)
         val rentalObject = rentalObjectService.getRentalObject(reservationDto.rentalObjectId)
-        val user = userService.getUser(reservationDto.userId)
+        val user = userService.getUserById(reservationDto.userId)
         return Reservation(
             reservationDto.id,
             reservationDto.startDate,

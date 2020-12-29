@@ -7,10 +7,10 @@ import javax.persistence.Embeddable
 @Embeddable
 data class UserGuestKey(
 
-        @Column(name = "user_id")
-        val userId: String,
+    @Column(name = "user_id")
+    val userId: String,
 
-        @Column(name = "guest_id")
-        val guestId: Int,
+    @Column(name = "person_id")
+    val personId: Int
 
-): Serializable
+) : Serializable

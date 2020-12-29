@@ -2,7 +2,7 @@ package pl.monochrome.manager.model.dto
 
 import pl.monochrome.manager.model.enums.ObjectType
 
-data class RentalObjectDTO(
+data class RentalObjectDto(
     val id: Int,
     val maxGuests: Int,
     val description: String,

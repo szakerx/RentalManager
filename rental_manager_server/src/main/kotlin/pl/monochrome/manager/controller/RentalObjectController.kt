@@ -2,8 +2,8 @@ package pl.monochrome.manager.controller
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import pl.monochrome.manager.model.dto.RentalObjectDTO
-import pl.monochrome.manager.service.RentalObjectService
+import pl.monochrome.manager.model.dto.RentalObjectDto
+import pl.monochrome.manager.service.db.RentalObjectService
 
 @RestController
 @RequestMapping("/rentalobjects")
@@ -14,10 +14,10 @@ class RentalObjectController @Autowired constructor(val service: RentalObjectSer
     fun getRentalObjectsForUser(@RequestParam userId: String) = service.getRentalObjectsForUser(userId)
 
     @PostMapping
-    fun addRentalObject(@RequestBody rentalObjectDto: RentalObjectDTO) = service.addRentalObject(rentalObjectDto)
+    fun addRentalObject(@RequestBody rentalObjectDto: RentalObjectDto) = service.addRentalObject(rentalObjectDto)
 
     @PutMapping
-    fun updateRentalObject(@RequestBody rentalObjectDto: RentalObjectDTO) = service.updateRentalObject(rentalObjectDto)
+    fun updateRentalObject(@RequestBody rentalObjectDto: RentalObjectDto) = service.updateRentalObject(rentalObjectDto)
 
     @GetMapping("/{id}")
     fun getRentalObject(@PathVariable rentalObjectId: Int) = service.getRentalObject(rentalObjectId)

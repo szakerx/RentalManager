@@ -6,5 +6,5 @@ import pl.monochrome.manager.model.database.Reservation
 
 @Repository
 interface ReservationRepository: JpaRepository<Reservation, Int> {
-    fun findAllByUserId(userId: String)
+    fun findAllByUserId(userId: String): Set<Reservation>
 }

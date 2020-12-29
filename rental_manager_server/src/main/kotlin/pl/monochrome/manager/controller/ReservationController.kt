@@ -3,7 +3,7 @@ package pl.monochrome.manager.controller
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import pl.monochrome.manager.model.dto.ReservationDto
-import pl.monochrome.manager.service.ReservationService
+import pl.monochrome.manager.service.db.ReservationService
 
 @RestController
 @RequestMapping("/reservations")

@@ -1,10 +1,9 @@
-package pl.monochrome.manager.service
+package pl.monochrome.manager.service.db
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import pl.monochrome.manager.model.database.RentalObject
-import pl.monochrome.manager.model.dto.RentalObjectDTO
-import pl.monochrome.manager.model.enums.ObjectType
+import pl.monochrome.manager.model.dto.RentalObjectDto
 import pl.monochrome.manager.repository.RentalObjectRepository
 
 @Service
@@ -17,12 +16,12 @@ class RentalObjectService @Autowired constructor(
 
     fun getRentalObject(id: Int) = rentalObjectRepository.findById(id).get()
 
-    fun addRentalObject(rentalObjectDto: RentalObjectDTO) {
+    fun addRentalObject(rentalObjectDto: RentalObjectDto) {
         val rentalObject = dtoToObject(rentalObjectDto)
         rentalObjectRepository.save(rentalObject)
     }
 
-    fun updateRentalObject(rentalObjectDto: RentalObjectDTO) {
+    fun updateRentalObject(rentalObjectDto: RentalObjectDto) {
         val rentalObject = dtoToObject(rentalObjectDto)
         rentalObjectRepository.save(rentalObject)
     }
@@ -31,8 +30,8 @@ class RentalObjectService @Autowired constructor(
         rentalObjectRepository.deleteById(rentalObjectId)
     }
 
-    private fun dtoToObject(rentalObjectDto: RentalObjectDTO): RentalObject {
-        val user = userService.getUser(rentalObjectDto.userId)
+    private fun dtoToObject(rentalObjectDto: RentalObjectDto): RentalObject {
+        val user = userService.getUserById(rentalObjectDto.userId)
         return RentalObject(
             id = rentalObjectDto.id,
             maxGuest = rentalObjectDto.maxGuests,
