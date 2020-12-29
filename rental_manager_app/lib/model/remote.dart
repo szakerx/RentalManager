@@ -133,14 +133,11 @@ class Remote  {
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      print(response.body);
       List body = jsonDecode(response.body);
       for (var i = 0; i < body.length; i++) {
         messageSchemes.add(MessageScheme.fromJson(body[i]));
       }
     } else {
-      print(response.body);
-      print(response.statusCode);
       throw Exception('Nie udało się');
     }
     return messageSchemes;
@@ -180,14 +177,12 @@ class Remote  {
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      print(response.body);
       List body = jsonDecode(response.body);
       for (var i = 0; i < body.length; i++) {
         reservations.add(Reservation.fromJson(body[i]));
       }
     } else {
-      print(response.body);
-      print(response.statusCode);
+
       throw Exception('Nie udało się');
     }
     return reservations;
@@ -209,8 +204,6 @@ class Remote  {
         rentalobjects.add(RentalObject.fromJson(body[i]));
       }
     } else {
-      print(response.body);
-      print(response.statusCode);
       throw Exception('Nie udało się');
     }
     return rentalobjects;
@@ -232,8 +225,7 @@ class Remote  {
         guests.add(Guest.fromJson(body[i]));
       }
     } else {
-      print(response.body);
-      print(response.statusCode);
+
       throw Exception('Nie udało się');
     }
     return guests;

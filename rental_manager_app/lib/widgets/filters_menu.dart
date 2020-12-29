@@ -4,11 +4,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager_app/model/message_scheme.dart';
 import 'package:rental_manager_app/model/remote.dart';
+import 'package:rental_manager_app/model/rental_object.dart';
 import 'package:rental_manager_app/widgets/reservations_dialog.dart';
 import 'package:rental_manager_app/widgets/text_input_decoration.dart';
 
 import 'calendar.dart';
 import 'custom_colors.dart';
+import 'filters_state.dart';
 
 class FiltersMenuDrawer extends StatefulWidget {
 
@@ -23,8 +25,8 @@ class FiltersMenuDrawer extends StatefulWidget {
 }
 
 class FiltersMenuDrawerState extends State<FiltersMenuDrawer> {
-  String _checkedRentalObject;
-  Future<List<MessageScheme>> _reservations;
+  Future<List<RentalObject>> _rentalObjects;
+  List<RentalObject> _rentalObjectsList;
   TextEditingController _goToDateController = TextEditingController();
   TextEditingController _sinceDateController = TextEditingController();
   TextEditingController _untilDateController = TextEditingController();
@@ -84,8 +86,11 @@ class FiltersMenuDrawerState extends State<FiltersMenuDrawer> {
   @override
   void initState() {
     super.initState();
-    _reservations = Remote.getMessageSchemes().then((value) {
-      _checkedRentalObject = value.first.id.toString();
+    _rentalObjects = Remote.getRentalObjects().then((value) {
+      _rentalObjectsList = value;
+      if (FiltersState.checkedRentalObject == null) {
+        FiltersState.checkedRentalObject = value.first.id.toString();
+      }
       return value;
     });
   }
@@ -102,8 +107,8 @@ class FiltersMenuDrawerState extends State<FiltersMenuDrawer> {
                 Column(children: [
                   Container(
                     height: MediaQuery. of(context). size. height/3,
-                    child: FutureBuilder<List<MessageScheme>>(
-                        future: _reservations,
+                    child: FutureBuilder<List<RentalObject>>(
+                        future: _rentalObjects,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return ExpansionTile(
@@ -120,23 +125,36 @@ class FiltersMenuDrawerState extends State<FiltersMenuDrawer> {
                                           itemBuilder: (_, i) {
                                             return RadioListTile(
                                                 title: Text(snapshot.data[i].name),
-                                                value: snapshot.data[i].id,
-                                                groupValue: _checkedRentalObject,
+                                                value: snapshot.data[i].id.toString(),
+                                                groupValue: FiltersState.checkedRentalObject,
                                                 onChanged: (value) {
                                                   setState(() {
-                                                    _checkedRentalObject = value;
+                                                    FiltersState.checkedRentalObject = value;
                                                   });
                                                 });
                                           }),
                                     )
                                   ),
-                                  Padding(padding: EdgeInsets.only(top: 10.0)),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // TODO filtruj wyniki w kalendarzu
-                                    },
-                                    child: Text("Filtruj"),
-                                  ),
+                                  Row(
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: FiltersState.filtering ? null : () {
+                                          FiltersState.filtering = true;
+                                          widget.calendar.setFilteredReservations(snapshot.data.where((element) => element.id.toString() == FiltersState.checkedRentalObject).first);
+                                          Navigator.of(context).pop();
+                                          },
+                                        child: Text("Filtruj"),
+                                      ),
+                                      Padding(padding: EdgeInsets.only(top: 10.0, right: 10.0)),
+                                      ElevatedButton(
+                                        onPressed: FiltersState.filtering ? () {
+                                          FiltersState.filtering = true;
+                                          widget.calendar.cancelFilteringReservations();
+                                        } : null,
+                                        child: Text("Zakończ"),
+                                      ),
+                                    ],
+                                  )
                             ]);
                           } else if (snapshot.hasError) {
                             return Text(
@@ -223,7 +241,7 @@ class FiltersMenuDrawerState extends State<FiltersMenuDrawer> {
                             //TODO idź do daty
                             showDialog(context: context,
                               builder: (context) {
-                               return ReservationsDialog(_sinceDateController.text, _untilDateController.text);
+                               return ReservationsDialog(_sinceDateController.text, _untilDateController.text, widget.calendar.getReservationsList(_selectedSinceDate, _selectedUntilDate), _rentalObjectsList);
                               });
                           } else {
                             setState(() {

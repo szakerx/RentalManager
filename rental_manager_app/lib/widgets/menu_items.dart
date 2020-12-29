@@ -108,7 +108,6 @@ class MenuItemsState extends State<MenuItems> {
             child: TextWithIcon(text: "Wyloguj", icon: Icons.exit_to_app),
           ),
           onTap: () {
-            print("Wylogowano");
             _signOut();
           },
         )
