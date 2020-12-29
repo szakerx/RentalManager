@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager_app/model/message_scheme.dart';
 import 'package:rental_manager_app/model/remote.dart';
+import 'package:rental_manager_app/model/rental_object.dart';
 import 'package:rental_manager_app/pages/rental_objects_page.dart';
 import 'package:rental_manager_app/widgets/custom_colors.dart';
 import 'package:rental_manager_app/widgets/side_menu.dart';
@@ -15,19 +16,20 @@ class RentalObjectsListPage extends StatefulWidget {
 
 class RentalObjectsListState extends State<RentalObjectsListPage> {
 
-  Future<List<MessageScheme>> _rentalObjects;
-  List<MessageScheme> _filteredRentalObjects = List();
+  Future<List<RentalObject>> _rentalObjects;
+  List<RentalObject> _filteredRentalObjects = List();
+  TextEditingController _searchingController = TextEditingController();
   bool searching = false;
 
   @override
   void initState() {
     super.initState();
-    _rentalObjects = Remote.getMessageSchemes().then((value) => _filteredRentalObjects = value);
+    _rentalObjects = Remote.getRentalObjects().then((value) => _filteredRentalObjects = value);
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<MessageScheme>>(
+    return FutureBuilder<List<RentalObject>>(
         future: _rentalObjects,
         builder: (context, snapshot) {
       if (snapshot.hasData) {
@@ -45,6 +47,30 @@ class RentalObjectsListState extends State<RentalObjectsListPage> {
               title: searching ?
               TextField(
                 autofocus: true,
+                controller: _searchingController,
+                decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      _searchingController.clear();
+                      setState(() {
+                        _filteredRentalObjects = snapshot.data;
+                      });
+                    },
+                    icon: Icon(Icons.clear, color: CustomColors.darkGreen,),
+                  ),
+                ),
+                onEditingComplete: () {
+                  _searchingController.clear();
+                  setState(() {
+                    _filteredRentalObjects = snapshot.data;
+                  });
+                },
+                onSubmitted: (_){
+                  _searchingController.clear();
+                  setState(() {
+                    _filteredRentalObjects = snapshot.data;
+                  });
+                },
                 onChanged: (text) {
                   setState(() {
                     _filteredRentalObjects = snapshot.data.where((u) =>
@@ -52,7 +78,6 @@ class RentalObjectsListState extends State<RentalObjectsListPage> {
                         .toLowerCase()
                         .contains(text.toLowerCase())))
                         .toList();
-                    print(_filteredRentalObjects);
                   });
                 },) : Text("Obiekty"),
               actions: [
@@ -81,7 +106,10 @@ class RentalObjectsListState extends State<RentalObjectsListPage> {
                       _filteredRentalObjects = snapshot.data;
                       Navigator.push(context, MaterialPageRoute(builder: (context) => RentalObjectsPage()));
                     },
-                    title: Text(_filteredRentalObjects[index].name),
+                    title: Text(_filteredRentalObjects[index].name,
+                      style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text("Dostępne miejsca: ${_filteredRentalObjects[index].maxGuest}"),
                     trailing: FlatButton(
                         minWidth: 50.0,
                         height: 50.0,

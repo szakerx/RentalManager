@@ -33,8 +33,8 @@ dependencies:
   google_fonts: ^1.1.1
   # Communicating with internet
   http: ^0.12.2
-  # Object to json, json to object
-  json_serializable: ^3.5.1
+  # Currency input
+  currency_text_input_formatter: ^1.0.3
 
 
   # The following adds the Cupertino Icons font to your application.

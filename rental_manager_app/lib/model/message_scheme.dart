@@ -1,15 +1,28 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:rental_manager_app/model/user.dart';
 
-part 'message_scheme.g.dart';
-
-@JsonSerializable()
 class MessageScheme {
-  MessageScheme(this.id, this.content, this.name);
-
-  String id;
-  String content;
+  int id;
   String name;
+  String content;
+  User user;
 
-  factory MessageScheme.fromJson(Map<String, dynamic> json) => _$MessageSchemeFromJson(json);
-  Map<String, dynamic> toJson() => _$MessageSchemeToJson(this);
+  MessageScheme({this.id, this.name, this.content, this.user});
+
+  MessageScheme.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    content = json['content'];
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['content'] = this.content;
+    if (this.user != null) {
+      data['user'] = this.user.toJson();
+    }
+    return data;
+  }
 }

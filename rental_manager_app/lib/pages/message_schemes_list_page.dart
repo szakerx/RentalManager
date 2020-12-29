@@ -79,7 +79,7 @@ class MessageSchemesListState extends State<MessageSchemesList> {
           } else if (snapshot.hasError) {
             return Text("Failed to fetch data");
           }
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         }),
     );
   }

@@ -1,27 +1,65 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:rental_manager_app/model/person.dart';
+import 'package:rental_manager_app/model/rental_object.dart';
+import 'package:rental_manager_app/model/user.dart';
 
-part 'reservation.g.dart';
-
-@JsonSerializable()
 class Reservation {
-  Reservation(this.id, this.guest, this.rentalObject, this.startDate, this.endDate, this.description, this.guestsCount, this.childrenCount, this.price);
-
-  String id;
-  @JsonKey(name: 'guest')
-  String guest;
-  @JsonKey(name: 'rental_object')
-  String rentalObject;
-  @JsonKey(name: 'start_date')
-  DateTime startDate;
-  @JsonKey(name: 'end_date')
-  DateTime endDate;
+  int id;
+  String startDate;
+  String endDate;
   String description;
-  @JsonKey(name: 'guests_count')
   int guestsCount;
-  @JsonKey(name: 'children_count')
   int childrenCount;
-  double price;
+  int price;
+  Person person;
+  RentalObject rentalObject;
+  User user;
 
-  factory Reservation.fromJson(Map<String, dynamic> json) => _$ReservationFromJson(json);
-  Map<String, dynamic> toJson() => _$ReservationToJson(this);
+  Reservation(
+      {this.id,
+        this.startDate,
+        this.endDate,
+        this.description,
+        this.guestsCount,
+        this.childrenCount,
+        this.price,
+        this.person,
+        this.rentalObject,
+        this.user});
+
+  Reservation.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    startDate = json['startDate'];
+    endDate = json['endDate'];
+    description = json['description'];
+    guestsCount = json['guestsCount'];
+    childrenCount = json['childrenCount'];
+    price = json['price'];
+    person =
+    json['person'] != null ? new Person.fromJson(json['person']) : null;
+    rentalObject = json['rentalObject'] != null
+        ? new RentalObject.fromJson(json['rentalObject'])
+        : null;
+    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['startDate'] = this.startDate;
+    data['endDate'] = this.endDate;
+    data['description'] = this.description;
+    data['guestsCount'] = this.guestsCount;
+    data['childrenCount'] = this.childrenCount;
+    data['price'] = this.price;
+    if (this.person != null) {
+      data['person'] = this.person.toJson();
+    }
+    if (this.rentalObject != null) {
+      data['rentalObject'] = this.rentalObject.toJson();
+    }
+    if (this.user != null) {
+      data['user'] = this.user.toJson();
+    }
+    return data;
+  }
 }

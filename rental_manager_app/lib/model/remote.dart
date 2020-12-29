@@ -1,13 +1,19 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:rental_manager_app/model/holiday.dart';
 import 'dart:convert';
 
 import 'package:rental_manager_app/model/message_scheme.dart';
+import 'package:rental_manager_app/model/person.dart';
+import 'package:rental_manager_app/model/rental_object.dart';
+import 'package:rental_manager_app/model/reservation.dart';
+
+import 'guest.dart';
 
 class Remote  {
-  static String serverUri = '192.168.0.141/';
+  static String serverUri = '192.168.0.141:8080';
 
   static Future<List<Holiday>> fetchHoliday(int year, int month, int day) async {
     // String apiKey = "eb42b5ffff294f61b59cfb7b339c1c34";
@@ -118,33 +124,30 @@ class Remote  {
   }
 
   static Future<List<MessageScheme>> getMessageSchemes() async {
-    // List<MessageScheme> messageSchemes = List();
-    //
-    // var queryParams = {
-    //   "userID": "XOG4xKvuOBbacoZn6LFASrHHJeJ2",
-    // };
-    // var uri = Uri.http(serverUri, "/schemes", queryParams);
-    //
-    // final response = await http.get(uri);
-    //
-    // if (response.statusCode == 200) {
-    //   List body = jsonDecode(response.body);
-    //   for (var i = 0; i < body.length; i++) {
-    //     messageSchemes.add(MessageScheme.fromJson(body[i]));
-    //   }
-    // } else {
-    //   // If the server did not return a 200 OK response,
-    //   // then throw an exception.
-    //   throw Exception('Failed to load album');
-    // }
-    // return messageSchemes;
-    return [
-      MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
-      MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
-      MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
-      MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
-      MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
-      MessageScheme("2","text2","Nazwa2")];
+    List<MessageScheme> messageSchemes = List();
+    var queryParams = {
+      "userId": FirebaseAuth.instance.currentUser.uid,
+    };
+    var uri = Uri.http(serverUri, "/schemes", queryParams);
+
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      List body = jsonDecode(response.body);
+      for (var i = 0; i < body.length; i++) {
+        messageSchemes.add(MessageScheme.fromJson(body[i]));
+      }
+    } else {
+      throw Exception('Nie udało się');
+    }
+    return messageSchemes;
+    // return [
+    //   MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
+    //   MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
+    //   MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
+    //   MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
+    //   MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
+    //   MessageScheme("2","text2","Nazwa2")];
   }
   static Future<MessageScheme> postMessageScheme(MessageScheme scheme) async {
 
@@ -163,22 +166,68 @@ class Remote  {
       throw Exception('Failed to load album');
     }
   }
-}
 
+  static Future<List<Reservation>> getReservations() async {
+    List<Reservation> reservations = List();
+    var queryParams = {
+      "userId": FirebaseAuth.instance.currentUser.uid,
+    };
+    var uri = Uri.http(serverUri, "/reservations", queryParams);
 
+    final response = await http.get(uri);
 
-class Album {
-  final int userId;
-  final int id;
-  final String title;
+    if (response.statusCode == 200) {
+      List body = jsonDecode(response.body);
+      for (var i = 0; i < body.length; i++) {
+        reservations.add(Reservation.fromJson(body[i]));
+      }
+    } else {
 
-  Album({this.userId, this.id, this.title});
+      throw Exception('Nie udało się');
+    }
+    return reservations;
+  }
 
-  factory Album.fromJson(Map<String, dynamic> json) {
-    return Album(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
-    );
+  static Future<List<RentalObject>> getRentalObjects() async {
+    List<RentalObject> rentalobjects = List();
+    var queryParams = {
+      "userId": FirebaseAuth.instance.currentUser.uid,
+    };
+    var uri = Uri.http(serverUri, "/rentalobjects", queryParams);
+
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      String bodyUtf = utf8.decode(response.bodyBytes);
+      List body = jsonDecode(bodyUtf);
+      for (var i = 0; i < body.length; i++) {
+        rentalobjects.add(RentalObject.fromJson(body[i]));
+      }
+    } else {
+      throw Exception('Nie udało się');
+    }
+    return rentalobjects;
+  }
+
+  static Future<List<Guest>> getGuests() async {
+    List<Guest> guests = List();
+    var queryParams = {
+      "userId": FirebaseAuth.instance.currentUser.uid,
+    };
+    var uri = Uri.http(serverUri, "/guests", queryParams);
+
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      String bodyUtf = utf8.decode(response.bodyBytes);
+      List body = jsonDecode(bodyUtf);
+      for (var i = 0; i < body.length; i++) {
+        guests.add(Guest.fromJson(body[i]));
+      }
+    } else {
+
+      throw Exception('Nie udało się');
+    }
+    return guests;
   }
 }
