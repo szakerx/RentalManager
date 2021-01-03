@@ -1,7 +1,7 @@
 package pl.monochrome.manager.model.database
 
+import java.math.BigDecimal
 import java.time.LocalDateTime
-import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -9,8 +9,8 @@ import javax.persistence.*
 data class Reservation(
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        val id: UUID,
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Int,
 
         @Column
         val startDate: LocalDateTime,
@@ -22,10 +22,13 @@ data class Reservation(
         val description: String?,
 
         @Column
-        val guests_count: Int,
+        val guestsCount: Int,
 
         @Column
-        val children_count: Int,
+        val childrenCount: Int,
+
+        @Column
+        val price: BigDecimal,
 
         @ManyToOne
         val person: Person,

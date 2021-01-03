@@ -6,5 +6,5 @@ import pl.monochrome.manager.model.database.UserGuestKey
 import java.util.*
 
 interface GuestRepository: JpaRepository<Guest, UserGuestKey> {
-    fun findByUser_Id(id: UUID): List<Guest>
+    fun findAllByUserId(id: String): Set<Guest>
 }

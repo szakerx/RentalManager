@@ -1,6 +1,5 @@
 package pl.monochrome.manager.model.database
 
-import java.util.*
 import javax.persistence.*
 
 @Entity
@@ -8,19 +7,19 @@ import javax.persistence.*
 data class Person(
 
         @Id
-        @GeneratedValue(strategy = GenerationType.AUTO)
-        val id: UUID = UUID.randomUUID(),
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        val id: Int,
 
         @Column
-        val name: String = "Default",
+        val name: String,
 
         @Column
-        val surname: String = "User",
+        val surname: String,
 
         @Column
-        val phone: String? = null,
+        val phone: String?,
 
         @Column
-        val mail: String? = null
+        val mail: String?
 
 )

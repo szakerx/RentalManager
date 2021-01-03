@@ -1,4 +1,4 @@
-package pl.monochrome.manager.service
+package pl.monochrome.manager.service.db
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -16,5 +16,5 @@ class UserService @Autowired constructor(private val repository: UserRepository)
 
     fun add(user: User) = repository.save(user)
 
-    fun findUser(userId: UUID) = repository.findById(userId)
+    fun getUserById(userId: String) = repository.findById(userId).get()
 }

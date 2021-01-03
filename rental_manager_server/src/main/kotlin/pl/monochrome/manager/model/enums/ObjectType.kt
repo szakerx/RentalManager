@@ -1,4 +1,4 @@
-package pl.monochrome.manager.model.custom
+package pl.monochrome.manager.model.enums
 
 enum class ObjectType {
     HOUSE,
