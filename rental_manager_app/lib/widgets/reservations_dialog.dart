@@ -44,6 +44,18 @@ class ReservationsDialog extends StatelessWidget {
                 ),
 
             ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: ElevatedButton(
+                  child: Text("Zamknij"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            )
           ],
         ),
     );

@@ -5,6 +5,7 @@ import 'package:rental_manager_app/model/holiday.dart';
 import 'package:rental_manager_app/model/remote.dart';
 import 'package:rental_manager_app/model/rental_object.dart';
 import 'package:rental_manager_app/model/reservation.dart';
+import 'package:rental_manager_app/pages/reservations_page.dart';
 import 'package:rental_manager_app/widgets/calendar_reservation_items.dart';
 import 'package:rental_manager_app/widgets/custom_colors.dart';
 import 'package:rental_manager_app/widgets/filters_state.dart';
@@ -29,6 +30,7 @@ class Calendar extends StatefulWidget {
   List<Reservation> getReservationsList(DateTime start, DateTime end) {
     return calendarState.getReservationsList(start, end);
   }
+
   @override
   State<StatefulWidget> createState() {
     return calendarState;
@@ -80,8 +82,9 @@ class CalendarState extends State<Calendar> {
     _mappedReservationsBackup = Map.of(_mappedReservations);
     setState(() {
       _mappedReservations.forEach((d, r) {
-        _mappedReservations[d] =
-            r.where((element) => element.rentalObject.id == rentalObject.id).toList();
+        _mappedReservations[d] = r
+            .where((element) => element.rentalObject.id == rentalObject.id)
+            .toList();
       });
     });
   }
@@ -102,7 +105,6 @@ class CalendarState extends State<Calendar> {
   }
 
   void _setSelectedDay() {
-
     DateTime formatted = DateTime(
         _calendarController.selectedDay.year,
         _calendarController.selectedDay.month,
@@ -113,16 +115,18 @@ class CalendarState extends State<Calendar> {
   }
 
   List<Reservation> getReservationsList(DateTime start, DateTime end) {
-     Map<DateTime, List<Reservation>> map;
-     if (FiltersState.filtering) {
-       map = Map.of(_mappedReservationsBackup);
+    Map<DateTime, List<Reservation>> map;
+    if (FiltersState.filtering) {
+      map = Map.of(_mappedReservationsBackup);
     } else {
-       map = Map.of(_mappedReservations);
-     }
+      map = Map.of(_mappedReservations);
+    }
 
-     List<Reservation> result = List();
-     map.values.forEach((element) { result.addAll(element); });
-     return result;
+    List<Reservation> result = List();
+    map.values.forEach((element) {
+      result.addAll(element);
+    });
+    return result;
   }
 
   String formattedDate(DateTime date) {
@@ -236,18 +240,40 @@ class CalendarState extends State<Calendar> {
                             ),
                             child: Column(
                               children: [
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Container(
-                                    padding: EdgeInsets.all(20.0),
-                                    child: Text(
-                                      formattedDate(_selectedDay),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyText1
-                                          .copyWith(fontSize: 30.0),
+                                Row(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Container(
+                                        padding: EdgeInsets.all(20.0),
+                                        child: Text(
+                                          formattedDate(_selectedDay),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyText1
+                                              .copyWith(fontSize: 30.0),
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: IconButton(
+                                        icon: Icon(Icons.add),
+                                        onPressed: () {
+                                          Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ReservationsPage(
+                                                      isInEditMode: true,
+                                                      reservation: Reservation(
+                                                          startDate:
+                                                              _selectedDay
+                                                                  .toString(),
+                                                          endDate: _selectedDay
+                                                              .toString()))));
+                                        },
+                                      ),
+                                    )
+                                  ],
                                 ),
                                 Divider(
                                     height: 1,
@@ -264,18 +290,21 @@ class CalendarState extends State<Calendar> {
                                         snapshot.data[0][_selectedDay] == null
                                             ? List()
                                             : snapshot.data[0][_selectedDay]),
-                                    FiltersState.filtering ? Align(
-                                      alignment: Alignment.bottomRight,
-                                      child: Padding(
-                                        padding: EdgeInsets.all(20.0),
-                                        child: ElevatedButton(
-                                          onPressed: (){
-                                            cancelFilteringReservations();
-                                          },
-                                          child: Text("Zakończ filtrowanie"),
-                                        ),
-                                      ),
-                                    ) : Container()
+                                    FiltersState.filtering
+                                        ? Align(
+                                            alignment: Alignment.bottomRight,
+                                            child: Padding(
+                                              padding: EdgeInsets.all(20.0),
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  cancelFilteringReservations();
+                                                },
+                                                child:
+                                                    Text("Zakończ filtrowanie"),
+                                              ),
+                                            ),
+                                          )
+                                        : Container()
                                   ],
                                 )),
                               ],

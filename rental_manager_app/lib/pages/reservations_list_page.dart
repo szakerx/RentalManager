@@ -98,7 +98,7 @@ class ReservationsListState extends State<ReservationsListPage> {
                     FlatButton(
                         minWidth: 50.0,
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ReservationsPage()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ReservationsPage(isInEditMode: true)));
                         },
                         child: Icon(Icons.add)),
                   ],

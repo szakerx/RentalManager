@@ -37,7 +37,7 @@ class RentalObject {
     data['type'] = this.type;
     data['allowedAnimals'] = this.allowedAnimals;
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['userId'] = this.user.id;
     }
     return data;
   }

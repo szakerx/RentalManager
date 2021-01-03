@@ -92,7 +92,7 @@ class RentalObjectsListState extends State<RentalObjectsListPage> {
                 FlatButton(
                     minWidth: 50.0,
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RentalObjectsPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RentalObjectsPage(isInEditMode: true,)));
                     },
                     child: Icon(Icons.add)),
               ],
@@ -104,7 +104,7 @@ class RentalObjectsListState extends State<RentalObjectsListPage> {
                     onTap: () {
                       searching = !searching;
                       _filteredRentalObjects = snapshot.data;
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RentalObjectsPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RentalObjectsPage(rentalObject: snapshot.data[index],)));
                     },
                     title: Text(_filteredRentalObjects[index].name,
                       style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.bold),
