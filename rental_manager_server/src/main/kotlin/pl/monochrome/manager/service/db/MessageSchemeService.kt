@@ -12,7 +12,7 @@ class MessageSchemeService @Autowired constructor(
     private val userService: UserService
 ) {
 
-    fun getAllSchemasForUser(userId: String): Set<MessageScheme> = repository.findByUser_Id(userId)
+    fun getAllSchemasForUser(userId: String): Set<MessageScheme> = repository.findAllByUserId(userId)
 
     fun getMessageScheme(messageSchemeId: Int) = repository.findById(messageSchemeId).get()
 

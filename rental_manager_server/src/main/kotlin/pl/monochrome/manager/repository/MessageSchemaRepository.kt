@@ -5,5 +5,5 @@ import pl.monochrome.manager.model.database.MessageScheme
 import java.util.*
 
 interface MessageSchemaRepository: JpaRepository<MessageScheme, Int> {
-    fun findByUser_Id(userId: String): Set<MessageScheme>
+    fun findAllByUserId(userId: String): Set<MessageScheme>
 }

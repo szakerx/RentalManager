@@ -21,14 +21,13 @@ dependencies {
 //	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-mail")
-	implementation("org.springframework.boot:spring-boot-starter-quartz")
 
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-	implementation("org.postgresql:postgresql:42.2.18")
+	implementation("org.postgresql:postgresql")
 	implementation ("com.google.firebase:firebase-admin:7.0.1")
 
 
