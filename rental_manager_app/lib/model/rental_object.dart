@@ -2,7 +2,7 @@ import 'package:rental_manager_app/model/user.dart';
 
 class RentalObject {
   int id;
-  int maxGuest;
+  int maxGuests;
   String description;
   String name;
   String type;
@@ -11,7 +11,7 @@ class RentalObject {
 
   RentalObject(
       {this.id,
-        this.maxGuest,
+        this.maxGuests,
         this.description,
         this.name,
         this.type,
@@ -20,7 +20,7 @@ class RentalObject {
 
   RentalObject.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    maxGuest = json['maxGuest'];
+    maxGuests = json['maxGuests'];
     description = json['description'];
     name = json['name'];
     type = json['type'];
@@ -31,7 +31,7 @@ class RentalObject {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['maxGuest'] = this.maxGuest;
+    data['maxGuests'] = this.maxGuests;
     data['description'] = this.description;
     data['name'] = this.name;
     data['type'] = this.type;

@@ -55,7 +55,7 @@ class Reservation {
       data['personId'] = this.person.id;
     }
     if (this.rentalObject != null) {
-      data['rentalObjecIdt'] = this.rentalObject.id;
+      data['rentalObjectId'] = this.rentalObject.id;
     }
     if (this.user != null) {
       data['userId'] = this.user.id;

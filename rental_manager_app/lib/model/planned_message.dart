@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:rental_manager_app/model/reservation.dart';
 
 import 'message_scheme.dart';
@@ -9,12 +10,19 @@ class PlannedMessage {
   MessageScheme messageScheme;
   Reservation reservation;
 
+  bool isBefore;
+  int days;
+  TimeOfDay time;
+
   PlannedMessage(
       {this.id,
-        this.sendingTime,
-        this.target,
-        this.messageScheme,
-        this.reservation});
+      this.sendingTime,
+      this.target,
+      this.messageScheme,
+      this.reservation,
+      this.isBefore,
+      this.days,
+      this.time});
 
   PlannedMessage.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -1,11 +1,21 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager_app/model/message_scheme.dart';
+import 'package:rental_manager_app/model/planned_message.dart';
 import 'package:rental_manager_app/model/remote.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:rental_manager_app/model/reservation.dart';
+import 'package:rental_manager_app/pages/reservations_page.dart';
 import 'package:rental_manager_app/widgets/text_input_decoration.dart';
 
 class PlannedMessageDialog extends StatefulWidget {
+
+  final ReservationsPageState parent;
+  final String startDate;
+  final String endDate;
+
+  PlannedMessageDialog(this.parent, this.startDate, this.endDate);
+
   @override
   State<StatefulWidget> createState() {
     return PlannedMessageDialogState();
@@ -14,7 +24,8 @@ class PlannedMessageDialog extends StatefulWidget {
 
 class PlannedMessageDialogState extends State<PlannedMessageDialog> {
   Future<List<MessageScheme>> _messageSchemes;
-  String _selectedMessageScheme;
+  String _selectedMessageSchemeString;
+  MessageScheme _selectedMessageScheme;
 
   TextEditingController _daysController = TextEditingController();
 
@@ -49,11 +60,12 @@ class PlannedMessageDialogState extends State<PlannedMessageDialog> {
                   if (snapshot.hasData) {
                     return DropdownButtonFormField(
                         hint: Text("Wybierz schemat wiadomości"),
-                        value: _selectedMessageScheme,
+                        value: _selectedMessageSchemeString,
                         items: _buildMessageSchemesList(snapshot.data),
                         onChanged: (newValue) {
                           setState(() {
-                            _selectedMessageScheme = newValue;
+                            _selectedMessageScheme = snapshot.data.where((element) => element.id.toString() == newValue).first;
+                            _selectedMessageSchemeString = newValue;
                           });
                         });
                   } else if (snapshot.hasError) {
@@ -123,7 +135,14 @@ class PlannedMessageDialogState extends State<PlannedMessageDialog> {
             ),
             Padding(padding: EdgeInsets.only(top: 20.0)),
             ElevatedButton(onPressed: () {
-              //Todo: zapisać do bazy
+              widget.parent.addPlannedMessage(PlannedMessage(
+                id: -1,
+                messageScheme: _selectedMessageScheme,
+                isBefore: _selectedBeforeAfter == "przed" ? true : false,
+                days: int.parse(_daysController.text),
+                time: _selectedTime,
+              ));
+              print(_selectedMessageScheme.name);
               Navigator.pop(context);
             }, child: Text("Zapisz"))
           ],

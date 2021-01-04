@@ -36,13 +36,13 @@ class MenuItemsState extends State<MenuItems> {
         page = HomePage();
         break;
       case "Obiekty":
-        page = RentalObjectsListPage(); //TODO zmienic
+        page = RentalObjectsListPage();
         break;
       case "Goście":
-        page = GuestsListPage(); //TODO zmienic
+        page = GuestsListPage();
         break;
       case "Rezerwacje":
-        page = ReservationsListPage(); //TODO zmienic
+        page = ReservationsListPage();
         break;
       case "Powiadomienia":
         page = MessageSchemesList();

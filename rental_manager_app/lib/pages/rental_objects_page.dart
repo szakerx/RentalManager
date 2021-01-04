@@ -1,13 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart' as Firebase;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rental_manager_app/model/remote.dart';
 import 'package:rental_manager_app/model/rental_object.dart';
+import 'package:rental_manager_app/model/user.dart';
+import 'package:rental_manager_app/pages/rental_objects_list_page.dart';
 import 'package:rental_manager_app/widgets/text_input_decoration.dart';
 
 class RentalObjectsPage extends StatefulWidget {
   RentalObject rentalObject;
   bool isInEditMode;
+  RentalObjectsListState parent;
 
-  RentalObjectsPage({this.rentalObject, this.isInEditMode = false});
+  RentalObjectsPage(this.parent, {this.rentalObject, this.isInEditMode = false});
 
   @override
   State<StatefulWidget> createState() {
@@ -19,6 +24,7 @@ class RentalObjectsPageState extends State<RentalObjectsPage> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _nameController;
   TextEditingController _descriptionController;
+  TextEditingController _maxGuestsController;
 
   bool _animalsAllowed = false;
   bool _validated = true;
@@ -31,12 +37,14 @@ class RentalObjectsPageState extends State<RentalObjectsPage> {
   String _selectedRentalObjectType;
   List<String> _rentalObjectTypesString = ["Pokój", "Dom", "Apartament"];
 
+  @override
   void initState() {
     super.initState();
     _nameController =
         TextEditingController(text: widget.rentalObject?.name ?? "");
     _descriptionController =
         TextEditingController(text: widget.rentalObject?.description ?? "");
+    _maxGuestsController = TextEditingController(text: widget.rentalObject?.maxGuests?.toString() ?? "01");
     if (widget.rentalObject != null) {
       _selectedRentalObjectType = _rentalObjectTypes[widget.rentalObject?.type];
       _animalsAllowed = widget.rentalObject.allowedAnimals;
@@ -117,6 +125,21 @@ class RentalObjectsPageState extends State<RentalObjectsPage> {
                     ),
                     Padding(padding: EdgeInsets.all(15.0)),
                     TextFormField(
+                      controller: _maxGuestsController,
+                      validator: (value) {
+                        if (int.parse(value) < 1) {
+                          return "Wartość nie może być mniejsza od 1";
+                        }
+                        return null;
+                      },
+                      readOnly: !widget.isInEditMode,
+                      decoration: TextInputDecoration(
+                              labelText: "Maksymalna ilość gości")
+                          .getInputDecoration(),
+                      keyboardType: TextInputType.number,
+                    ),
+                    Padding(padding: EdgeInsets.all(15.0)),
+                    TextFormField(
                       controller: _descriptionController,
                       readOnly: !widget.isInEditMode,
                       decoration: TextInputDecoration(labelText: "Opis")
@@ -127,15 +150,57 @@ class RentalObjectsPageState extends State<RentalObjectsPage> {
                     ),
                     widget.isInEditMode
                         ? ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               if (_selectedRentalObjectType == null) {
                                 setState(() {
                                   _validated = false;
                                 });
                               } else {
                                 if (_formKey.currentState.validate()) {
-                                  // TODO zapisz do bazy danych
-                                  Navigator.pop(context);
+                                  RentalObject object;
+                                  if (widget.rentalObject == null) {
+                                    object = RentalObject(
+                                        id: -1,
+                                        maxGuests: int.parse(
+                                            _maxGuestsController.text),
+                                        description:
+                                            _descriptionController.text,
+                                        name: _nameController.text,
+                                        type: _rentalObjectTypes.entries
+                                            .where((element) =>
+                                                element.value ==
+                                                _selectedRentalObjectType)
+                                            .first
+                                            .key,
+                                        allowedAnimals: _animalsAllowed,
+                                        user: User(
+                                            id: Firebase.FirebaseAuth.instance
+                                                .currentUser.uid));
+                                  } else {
+                                    print(int.parse(_maxGuestsController.text));
+                                    object = RentalObject(
+                                      id: widget.rentalObject.id,
+                                      maxGuests:
+                                          int.parse(_maxGuestsController.text),
+                                      description: _descriptionController.text,
+                                      name: _nameController.text,
+                                      type: _rentalObjectTypes.entries
+                                          .where((element) =>
+                                              element.value ==
+                                              _selectedRentalObjectType)
+                                          .first
+                                          .key,
+                                      allowedAnimals: _animalsAllowed,
+                                      user: widget.rentalObject.user,
+                                    );
+                                  }
+
+                                  await Remote.postRentalObject(object).then((value) {
+                                    print("popping");
+                                    print(value);
+                                    widget.parent.updateList();
+                                    Navigator.pop(context);
+                                  });
                                 }
                               }
                             },
@@ -149,7 +214,9 @@ class RentalObjectsPageState extends State<RentalObjectsPage> {
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyText1
-                                .copyWith(color: Theme.of(context).errorColor, fontSize: 12.0),
+                                .copyWith(
+                                    color: Theme.of(context).errorColor,
+                                    fontSize: 12.0),
                           )
                   ],
                 ),

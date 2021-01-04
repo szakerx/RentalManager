@@ -13,7 +13,8 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 
 class Calendar extends StatefulWidget {
-  CalendarState calendarState = CalendarState();
+  final CalendarState calendarState = CalendarState();
+
 
   void setSelectedDay(DateTime data) {
     calendarState.setSelectedDay(data);

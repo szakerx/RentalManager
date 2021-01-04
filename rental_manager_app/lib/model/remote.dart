@@ -10,7 +10,7 @@ import 'package:rental_manager_app/model/reservation.dart';
 import 'guest.dart';
 
 class Remote {
-  static String serverUri = '192.168.0.142:8080';
+  static String serverUri = '192.168.0.120:8080';
 
   static Future<List<Holiday>> fetchHoliday(
       int year, int month, int day) async {
@@ -128,7 +128,7 @@ class Remote {
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      List body = jsonDecode(response.body);
+      List body = jsonDecode(utf8.decode(response.bodyBytes));
       for (var i = 0; i < body.length; i++) {
         reservations.add(Reservation.fromJson(body[i]));
       }
@@ -141,7 +141,7 @@ class Remote {
     var queryParams = {
       "userID": FirebaseAuth.instance.currentUser.uid,
     };
-    var uri = Uri.http(serverUri, "/rentalobjects", queryParams);
+    var uri = Uri.http(serverUri, "/reservations", queryParams);
 
     var body = reservation.toJson();
 
@@ -151,7 +151,23 @@ class Remote {
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
-      return Reservation.fromJson(jsonDecode(response.body));
+      return Reservation.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+    } else {
+      throw Exception('Nie udało się');
+    }
+  }
+  static Future<String> deleteReservation(Reservation reservation) async {
+    var queryParams = {
+      "userID": FirebaseAuth.instance.currentUser.uid,
+    };
+    var uri = Uri.http(serverUri, "/reservations/${reservation.id}", queryParams);
+
+    final response = await http.delete(uri);
+
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      return "";
     } else {
       throw Exception('Nie udało się');
     }
@@ -188,10 +204,22 @@ class Remote {
     final response = await http.post(uri,
         body: jsonEncode(body), headers: {"Content-Type": "application/json"});
 
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200) {
-      return RentalObject.fromJson(jsonDecode(response.body));
+      return RentalObject.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+    } else {
+      throw Exception('Nie udało się');
+    }
+  }
+  static Future<String> deleteRentalObject(RentalObject object) async {
+    var queryParams = {
+      "userID": FirebaseAuth.instance.currentUser.uid,
+    };
+    var uri = Uri.http(serverUri, "/rentalobjects/${object.id}", queryParams);
+
+    final response = await http.delete(uri);
+
+    if (response.statusCode == 200) {
+      return "";
     } else {
       throw Exception('Nie udało się');
     }
@@ -228,10 +256,24 @@ class Remote {
     final response = await http.post(uri,
         body: jsonEncode(body), headers: {"Content-Type": "application/json"});
 
+    if (response.statusCode == 200) {
+      return Guest.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+    } else {
+      throw Exception('Nie udało się');
+    }
+  }
+  static Future<String> deleteGuest(Guest guest) async {
+    var queryParams = {
+      "userID": FirebaseAuth.instance.currentUser.uid,
+    };
+    var uri = Uri.http(serverUri, "/guests/${guest.id}", queryParams);
+
+    final response = await http.delete(uri);
+
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
-      return Guest.fromJson(jsonDecode(response.body));
+      return "";
     } else {
       throw Exception('Nie udało się');
     }
@@ -247,44 +289,14 @@ class Remote {
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      List body = jsonDecode(response.body);
+      List body = jsonDecode(utf8.decode(response.bodyBytes));
       for (var i = 0; i < body.length; i++) {
         messageSchemes.add(MessageScheme.fromJson(body[i]));
       }
-      print(messageSchemes);
     } else {
       throw Exception('Nie udało się');
     }
     return messageSchemes;
-    // return [
-    //   MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
-    //   MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
-    //   MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
-    //   MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
-    //   MessageScheme("1", "text text text text text text text text text text text text text text text ", "nazwa"),
-    //   MessageScheme("2","text2","Nazwa2")];
-  }
-  static Future<List<PlannedMessage>> getPlannedMessagesForReservation(
-      String reservationId) async {
-    List<PlannedMessage> plannedMessages = List();
-    var queryParams = {
-      "userId": FirebaseAuth.instance.currentUser.uid,
-      "reservationId": reservationId
-    };
-    var uri = Uri.http(serverUri, "/plannedmessages", queryParams);
-
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      String bodyUtf = utf8.decode(response.bodyBytes);
-      List body = jsonDecode(bodyUtf);
-      for (var i = 0; i < body.length; i++) {
-        plannedMessages.add(PlannedMessage.fromJson(body[i]));
-      }
-    } else {
-      throw Exception('Nie udało się');
-    }
-    return plannedMessages;
   }
   static Future<MessageScheme> postMessageScheme(MessageScheme scheme) async {
     var queryParams = {
@@ -300,7 +312,7 @@ class Remote {
     print(response.statusCode);
     print(response.body);
     if (response.statusCode == 200) {
-      return MessageScheme.fromJson(jsonDecode(response.body));
+      return MessageScheme.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
     } else {
       throw Exception('Nie udało się');
     }
@@ -310,6 +322,69 @@ class Remote {
       "userID": FirebaseAuth.instance.currentUser.uid,
     };
     var uri = Uri.http(serverUri, "/schemes/${scheme.id}", queryParams);
+
+    final response = await http.delete(uri);
+
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      return "";
+    } else {
+      throw Exception('Nie udało się');
+    }
+  }
+
+  static Future<List<PlannedMessage>> getPlannedMessagesForReservation(
+      int reservationId) async {
+    List<PlannedMessage> plannedMessages = List();
+    var queryParams = {
+      "userId": FirebaseAuth.instance.currentUser.uid,
+      "reservationId": reservationId.toString()
+    };
+    var uri = Uri.http(serverUri, "/plannedmessages", queryParams);
+
+    final response = await http.get(uri);
+
+    print(response.body);
+    print(response.statusCode);
+
+    if (response.statusCode == 200) {
+      String bodyUtf = utf8.decode(response.bodyBytes);
+      List body = jsonDecode(bodyUtf);
+      for (var i = 0; i < body.length; i++) {
+        plannedMessages.add(PlannedMessage.fromJson(body[i]));
+      }
+    } else {
+      throw Exception('Nie udało się');
+    }
+    return plannedMessages;
+  }
+  static Future<PlannedMessage> postPlannedMessage(PlannedMessage scheme) async {
+    var queryParams = {
+      "userID": FirebaseAuth.instance.currentUser.uid,
+    };
+    var uri = Uri.http(serverUri, "/plannedmessages", queryParams);
+
+    var body = scheme.toJson();
+
+    print(body);
+
+    final response = await http.post(uri,
+        body: jsonEncode(body), headers: {"Content-Type": "application/json"});
+
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      return PlannedMessage.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+    } else {
+      throw Exception('Nie udało się');
+    }
+  }
+  static Future<String> deletePlannedMessage(PlannedMessage scheme) async {
+    var queryParams = {
+      "userID": FirebaseAuth.instance.currentUser.uid,
+    };
+    var uri = Uri.http(serverUri, "/plannedmessages/${scheme.id}", queryParams);
 
     final response = await http.delete(uri);
 

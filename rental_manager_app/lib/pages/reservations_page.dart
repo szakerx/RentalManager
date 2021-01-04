@@ -1,14 +1,15 @@
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:firebase_auth/firebase_auth.dart' as Firebase;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:rental_manager_app/model/guest.dart';
-import 'package:rental_manager_app/model/message_scheme.dart';
-import 'package:rental_manager_app/model/person.dart';
 import 'package:rental_manager_app/model/planned_message.dart';
 import 'package:rental_manager_app/model/remote.dart';
 import 'package:rental_manager_app/model/rental_object.dart';
 import 'package:rental_manager_app/model/reservation.dart';
+import 'package:rental_manager_app/model/user.dart';
+import 'package:rental_manager_app/pages/reservations_list_page.dart';
 import 'package:rental_manager_app/widgets/planned_message_dialog.dart';
 import 'package:rental_manager_app/widgets/text_input_decoration.dart';
 import 'package:rental_manager_app/widgets/text_with_icon.dart';
@@ -16,8 +17,9 @@ import 'package:rental_manager_app/widgets/text_with_icon.dart';
 class ReservationsPage extends StatefulWidget {
   Reservation reservation;
   bool isInEditMode;
+  ReservationsListState parent;
 
-  ReservationsPage({this.reservation, this.isInEditMode = false});
+  ReservationsPage({this.parent, this.reservation, this.isInEditMode = false});
 
   @override
   State<StatefulWidget> createState() {
@@ -36,28 +38,34 @@ class ReservationsPageState extends State<ReservationsPage> {
   TextEditingController _untilDateController = TextEditingController();
   DateTime _selectedUntilDate = DateTime.now();
 
-  Future<List<PlannedMessage>> _plannedMessages;
+  Future<List<PlannedMessage>> _plannedMessagesFuture;
+  List<PlannedMessage> _plannedMessages;
 
-  Future<List<Guest>> _guestsList;
-  Future<List<RentalObject>> _rentalObjectsList;
+  Future<List<Guest>> _guestsListFuture;
+  List<Guest> _guestsList;
+  Future<List<RentalObject>> _rentalObjectsListFuture;
+  List<RentalObject> _rentalObjectsList;
   String _selectedRentalObject;
   String _selectedGuest;
 
   @override
   void initState() {
     super.initState();
-    _rentalObjectsList = Remote.getRentalObjects();
-    _guestsList = Remote.getGuests();
+    _rentalObjectsListFuture =
+        Remote.getRentalObjects().then((value) => _rentalObjectsList = value);
+    _guestsListFuture = Remote.getGuests().then((value) => _guestsList = value);
 
     if (widget.reservation == null) {
       _guestsAmountController.text = "0";
       _childrenAmountController.text = "0";
       _sinceDateController.text = getFormattedDate(DateTime.now());
       _untilDateController.text = getFormattedDate(DateTime.now());
-      _plannedMessages = Remote.getPlannedMessagesForReservation("-1");
+      _plannedMessagesFuture = Remote.getPlannedMessagesForReservation(-1)
+          .then((value) => _plannedMessages = value);
     } else {
-      _plannedMessages = Remote.getPlannedMessagesForReservation(
-          widget.reservation.id.toString());
+      _plannedMessagesFuture =
+          Remote.getPlannedMessagesForReservation(widget.reservation.id)
+              .then((value) => _plannedMessages = value);
       _guestsAmountController.text = widget.reservation.guestsCount.toString();
       _childrenAmountController.text =
           widget.reservation.childrenCount.toString();
@@ -101,7 +109,7 @@ class ReservationsPageState extends State<ReservationsPage> {
                 children: [
                   FutureBuilder<List<Guest>>(
                     // Person
-                    future: _guestsList,
+                    future: _guestsListFuture,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return IgnorePointer(
@@ -126,7 +134,7 @@ class ReservationsPageState extends State<ReservationsPage> {
                   ),
                   Padding(padding: EdgeInsets.only(top: 10.0)),
                   FutureBuilder<List<RentalObject>>(
-                    future: _rentalObjectsList,
+                    future: _rentalObjectsListFuture,
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return IgnorePointer(
@@ -220,13 +228,6 @@ class ReservationsPageState extends State<ReservationsPage> {
                     controller: _priceController,
                     decoration: TextInputDecoration(labelText: "Cena")
                         .getInputDecoration(),
-                    inputFormatters: [
-                      CurrencyTextInputFormatter(
-                        locale: 'pl',
-                        decimalDigits: 0,
-                        symbol: 'PLN ',
-                      )
-                    ],
                     keyboardType: TextInputType.number,
                   ),
                   Padding(padding: EdgeInsets.only(top: 20.0)),
@@ -240,13 +241,13 @@ class ReservationsPageState extends State<ReservationsPage> {
                     minLines: 7,
                   ),
                   FutureBuilder<List<PlannedMessage>>(
-                      future: _plannedMessages,
+                      future: _plannedMessagesFuture,
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return Column(
                             children: () {
                               List<Widget> elements = List();
-                              snapshot.data.forEach((element) {
+                              _plannedMessages.forEach((element) {
                                 elements.add(ListTile(
                                   title: Text(element.messageScheme.name),
                                   subtitle: Text(getFormattedTimeDateFromString(
@@ -254,7 +255,12 @@ class ReservationsPageState extends State<ReservationsPage> {
                                   trailing: IconButton(
                                     icon: Icon(Icons.cancel_outlined),
                                     onPressed: () {
-                                      //TODO: remove planned message
+                                      if (element.id != -1)
+                                        Remote.deletePlannedMessage(element);
+                                      setState(() {
+                                        _plannedMessages
+                                            .removeWhere((m) => m == element);
+                                      });
                                     },
                                   ),
                                 ));
@@ -276,7 +282,12 @@ class ReservationsPageState extends State<ReservationsPage> {
                             showDialog(
                                 context: context,
                                 builder: (context) {
-                                  return PlannedMessageDialog();
+                                  return PlannedMessageDialog(
+                                      this,
+                                      widget.reservation?.startDate ??
+                                          _selectedSinceDate.toString(),
+                                      widget.reservation?.endDate ??
+                                          _selectedUntilDate.toString());
                                 });
                           },
                           child: TextWithIcon(
@@ -285,10 +296,44 @@ class ReservationsPageState extends State<ReservationsPage> {
                   widget.isInEditMode
                       ? ElevatedButton(
                           onPressed: () {
-                            //TODO zapisz do bazy
                             if (_formKey.currentState.validate()) {
-                              Navigator.pop(context);
-                            } else {}
+                              Reservation r = Reservation(
+                                  id: widget.reservation == null
+                                      ? -1
+                                      : widget.reservation.id,
+                                  startDate:
+                                      _selectedSinceDate.toIso8601String(),
+                                  endDate: _selectedUntilDate.toIso8601String(),
+                                  description: _descriptionController.text,
+                                  guestsCount:
+                                      int.parse(_guestsAmountController.text),
+                                  childrenCount:
+                                      int.parse(_childrenAmountController.text),
+                                  price: int.parse(_priceController.text),
+                                  person: _guestsList
+                                      .where((element) =>
+                                          element.person.id.toString() ==
+                                          _selectedGuest)
+                                      .first
+                                      .person,
+                                  rentalObject: _rentalObjectsList
+                                      .where((element) =>
+                                          element.id.toString() ==
+                                          _selectedRentalObject)
+                                      .first,
+                                  user: widget.reservation == null
+                                      ? User(
+                                          id: Firebase.FirebaseAuth.instance.currentUser.uid)
+                                      : widget.reservation.user);
+                              Remote.postReservation(r).then((value) {
+                                _plannedMessages.forEach((element) {
+                                  element.reservation = r;
+                                  Remote.postPlannedMessage(element);
+                                });
+                                widget.parent.updateList();
+                                Navigator.pop(context);
+                              });
+                            }
                           },
                           child: Text("Zapisz"))
                       : Container(),
@@ -319,16 +364,46 @@ class ReservationsPageState extends State<ReservationsPage> {
     return elements;
   }
 
+  void addPlannedMessage(PlannedMessage pm) {
+    setState(() {
+      pm.sendingTime = getSendingTime(pm);
+      _plannedMessages.add(pm);
+    });
+  }
+
+  String getSendingTime(PlannedMessage pm) {
+    String result;
+    if (pm.isBefore) {
+      DateTime d = widget.reservation == null
+          ? _selectedSinceDate
+          : DateTime.parse(widget.reservation.startDate);
+      result = DateTime(
+              d.year, d.month, d.day - pm.days, pm.time.hour, pm.time.minute)
+          .toIso8601String();
+    } else {
+      DateTime d = widget.reservation == null
+          ? _selectedUntilDate
+          : DateTime.parse(widget.reservation.endDate);
+      result = DateTime(
+              d.year, d.month, d.day + pm.days, pm.time.hour, pm.time.minute)
+          .toIso8601String();
+    }
+    return result;
+  }
+
   Future<void> _selectSinceDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: _selectedSinceDate,
         firstDate: DateTime(2015, 8),
         lastDate: DateTime(2101));
-    if (picked != null && picked != _selectedSinceDate)
+    if (picked != null)
       setState(() {
         _selectedSinceDate = picked;
         _sinceDateController.text = "${getFormattedDate(_selectedSinceDate)}";
+        _plannedMessages.forEach((element) {
+          element.sendingTime = getSendingTime(element);
+        });
       });
   }
 
@@ -342,6 +417,9 @@ class ReservationsPageState extends State<ReservationsPage> {
       setState(() {
         _selectedUntilDate = picked;
         _untilDateController.text = "${getFormattedDate(_selectedUntilDate)}";
+        _plannedMessages.forEach((element) {
+          element.sendingTime = getSendingTime(element);
+        });
       });
   }
 
