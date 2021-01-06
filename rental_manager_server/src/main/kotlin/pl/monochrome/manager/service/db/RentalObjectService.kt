@@ -16,14 +16,14 @@ class RentalObjectService @Autowired constructor(
 
     fun getRentalObject(id: Int) = rentalObjectRepository.findById(id).get()
 
-    fun addRentalObject(rentalObjectDto: RentalObjectDto) {
+    fun addRentalObject(rentalObjectDto: RentalObjectDto): RentalObject {
         val rentalObject = dtoToObject(rentalObjectDto)
-        rentalObjectRepository.save(rentalObject)
+        return rentalObjectRepository.save(rentalObject)
     }
 
-    fun updateRentalObject(rentalObjectDto: RentalObjectDto) {
+    fun updateRentalObject(rentalObjectDto: RentalObjectDto): RentalObject {
         val rentalObject = dtoToObject(rentalObjectDto)
-        rentalObjectRepository.save(rentalObject)
+        return rentalObjectRepository.save(rentalObject)
     }
 
     fun deleteRentalObject(rentalObjectId: Int) {
@@ -34,7 +34,7 @@ class RentalObjectService @Autowired constructor(
         val user = userService.getUserById(rentalObjectDto.userId)
         return RentalObject(
             id = rentalObjectDto.id,
-            maxGuest = rentalObjectDto.maxGuests,
+            maxGuests = rentalObjectDto.maxGuests,
             description = rentalObjectDto.description,
             name = rentalObjectDto.name,
             type = rentalObjectDto.type,

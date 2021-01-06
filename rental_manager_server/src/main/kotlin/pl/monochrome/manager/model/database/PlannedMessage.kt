@@ -1,11 +1,12 @@
 package pl.monochrome.manager.model.database
 
-import org.hibernate.annotations.Type
-import org.hibernate.annotations.TypeDef
+import org.hibernate.annotations.*
 import pl.monochrome.manager.model.enums.PostgresqlEnumType
 import pl.monochrome.manager.model.enums.Target
 import java.time.LocalDateTime
 import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @TypeDef(
@@ -32,4 +33,5 @@ data class PlannedMessage(
 
     @ManyToOne
     val reservation: Reservation
+
 )

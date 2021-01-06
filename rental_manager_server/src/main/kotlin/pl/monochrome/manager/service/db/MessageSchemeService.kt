@@ -14,7 +14,7 @@ class MessageSchemeService @Autowired constructor(
 
     fun getAllSchemasForUser(userId: String): Set<MessageScheme> = repository.findAllByUserId(userId)
 
-    fun getMessageScheme(messageSchemeId: Int) = repository.findById(messageSchemeId).get()
+    fun getMessageScheme(messageSchemeId: Int) = repository.findById(messageSchemeId)
 
     fun addMessageScheme(messageSchemaDto: MessageSchemeDto): MessageScheme {
         val messageScheme = dtoToObject(messageSchemaDto)
@@ -26,12 +26,11 @@ class MessageSchemeService @Autowired constructor(
         return repository.save(messageScheme)
     }
 
-    fun deleteMessageScheme(messageSchemaDto: MessageSchemeDto) {
-        return repository.deleteById(messageSchemaDto.id)
-    }
+    fun deleteMessageScheme(messageSchemeId: Int) = repository.deleteById(messageSchemeId)
 
     private fun dtoToObject(messageSchemaDto: MessageSchemeDto): MessageScheme {
         val user = userService.getUserById(messageSchemaDto.userId)
         return MessageScheme(messageSchemaDto.id, messageSchemaDto.name, messageSchemaDto.content, user)
     }
+
 }

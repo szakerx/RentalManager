@@ -19,10 +19,10 @@ class RentalObjectController @Autowired constructor(val service: RentalObjectSer
     @PutMapping
     fun updateRentalObject(@RequestBody rentalObjectDto: RentalObjectDto) = service.updateRentalObject(rentalObjectDto)
 
-    @GetMapping("/{id}")
+    @GetMapping("/{rentalObjectId}")
     fun getRentalObject(@PathVariable rentalObjectId: Int) = service.getRentalObject(rentalObjectId)
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{rentalObjectId}")
     fun deleteRentalObject(@PathVariable rentalObjectId: Int) = service.deleteRentalObject(rentalObjectId)
 
 }

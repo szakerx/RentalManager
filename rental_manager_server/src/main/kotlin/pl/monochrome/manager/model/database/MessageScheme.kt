@@ -18,4 +18,5 @@ data class MessageScheme(
 
         @ManyToOne
         val user: User?
+
 )

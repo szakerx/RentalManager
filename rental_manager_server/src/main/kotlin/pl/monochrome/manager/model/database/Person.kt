@@ -20,6 +20,6 @@ data class Person(
         val phone: String?,
 
         @Column
-        val mail: String?
+        val mail: String
 
 )

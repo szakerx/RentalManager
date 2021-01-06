@@ -13,6 +13,10 @@ class ReservationService @Autowired constructor(
     private val rentalObjectService: RentalObjectService,
     private val userService: UserService
 ) {
+
+    @Autowired
+    private lateinit var plannedMessageService: PlannedMessageService
+
     fun getReservationsForUser(userId: String) = reservationRepository.findAllByUserId(userId)
 
     fun addReservation(reservationDto: ReservationDto): Reservation {
@@ -30,6 +34,8 @@ class ReservationService @Autowired constructor(
     }
 
     fun deleteReservation(reservationId: Int) {
+        val plannedMessages = reservationRepository.getAllPlannedMessages(reservationId)
+        plannedMessages.forEach { plannedMessageService.deletePlannedMessage(it.id) }
         reservationRepository.deleteById(reservationId)
     }
 
@@ -42,7 +48,7 @@ class ReservationService @Autowired constructor(
             reservationDto.startDate,
             reservationDto.endDate,
             reservationDto.description,
-            reservationDto.guestCount,
+            reservationDto.guestsCount,
             reservationDto.childrenCount,
             reservationDto.price,
             person,

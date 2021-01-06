@@ -9,13 +9,13 @@ import pl.monochrome.manager.service.db.PlannedMessageService
 @RequestMapping("/plannedmessages")
 class PlannedMessageController @Autowired constructor(private val service: PlannedMessageService) {
 
-    @GetMapping("/{id}")
+    @GetMapping("/{plannedMessageId}")
     fun getPlannedMessage(@PathVariable plannedMessageId: Int) = service.getPlannedMessageById(plannedMessageId)
 
     @PostMapping
     fun addPlannedMessage(@RequestBody plannedMessageDto: PlannedMessageDto) = service.addPlannedMessage(plannedMessageDto)
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{plannedMessageId}")
     fun deletePlannedMessage(@PathVariable plannedMessageId: Int) = service.deletePlannedMessage(plannedMessageId)
 
     @PutMapping

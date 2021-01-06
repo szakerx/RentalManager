@@ -16,4 +16,5 @@ class EmailService @Autowired constructor(private val emailSender: JavaMailSende
         simpleMailMessage.setText(text)
         emailSender.send(simpleMailMessage)
     }
+
 }
