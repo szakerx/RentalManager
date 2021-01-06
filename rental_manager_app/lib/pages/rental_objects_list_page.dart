@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager_app/model/message_scheme.dart';
@@ -25,6 +27,13 @@ class RentalObjectsListState extends State<RentalObjectsListPage> {
   void initState() {
     super.initState();
     _rentalObjects = Remote.getRentalObjects().then((value) => _filteredRentalObjects = value);
+  }
+
+  void updateList() {
+    setState(() {
+      searching = false;
+      _rentalObjects = Remote.getRentalObjects().then((value) => _filteredRentalObjects = value);
+    });
   }
 
   @override
@@ -92,7 +101,7 @@ class RentalObjectsListState extends State<RentalObjectsListPage> {
                 FlatButton(
                     minWidth: 50.0,
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RentalObjectsPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RentalObjectsPage(this, isInEditMode: true,)));
                     },
                     child: Icon(Icons.add)),
               ],
@@ -104,22 +113,21 @@ class RentalObjectsListState extends State<RentalObjectsListPage> {
                     onTap: () {
                       searching = !searching;
                       _filteredRentalObjects = snapshot.data;
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RentalObjectsPage()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => RentalObjectsPage(this, rentalObject: snapshot.data[index],)));
                     },
                     title: Text(_filteredRentalObjects[index].name,
                       style: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text("Dostępne miejsca: ${_filteredRentalObjects[index].maxGuest}"),
+                    subtitle: Text("Dostępne miejsca: ${_filteredRentalObjects[index].maxGuests}"),
                     trailing: FlatButton(
                         minWidth: 50.0,
                         height: 50.0,
                         onPressed: () {
-                          //TODO usunac z bazy
-                          setState(() {
-                            searching = !searching;
-                            _filteredRentalObjects.removeAt(index);
-                            snapshot.data.removeAt(index);
-                          });
+                          Remote.deleteRentalObject(snapshot.data[index])
+                              .then((value) => setState(() {
+                                updateList();
+                          }));
+
                         },
                         child: Icon(Icons.delete)),
                   );

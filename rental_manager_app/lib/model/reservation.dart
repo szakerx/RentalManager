@@ -15,13 +15,13 @@ class Reservation {
   User user;
 
   Reservation(
-      {this.id,
-        this.startDate,
-        this.endDate,
-        this.description,
-        this.guestsCount,
-        this.childrenCount,
-        this.price,
+      {this.id = 0,
+        this.startDate = "",
+        this.endDate = "",
+        this.description = "",
+        this.guestsCount = 0,
+        this.childrenCount = 0,
+        this.price = 0,
         this.person,
         this.rentalObject,
         this.user});
@@ -52,13 +52,13 @@ class Reservation {
     data['childrenCount'] = this.childrenCount;
     data['price'] = this.price;
     if (this.person != null) {
-      data['person'] = this.person.toJson();
+      data['personId'] = this.person.id;
     }
     if (this.rentalObject != null) {
-      data['rentalObject'] = this.rentalObject.toJson();
+      data['rentalObjectId'] = this.rentalObject.id;
     }
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['userId'] = this.user.id;
     }
     return data;
   }

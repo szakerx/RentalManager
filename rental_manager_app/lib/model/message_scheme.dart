@@ -21,7 +21,7 @@ class MessageScheme {
     data['name'] = this.name;
     data['content'] = this.content;
     if (this.user != null) {
-      data['user'] = this.user.toJson();
+      data['userId'] = this.user.id;
     }
     return data;
   }
