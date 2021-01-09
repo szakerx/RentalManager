@@ -5,13 +5,16 @@ import org.springframework.stereotype.Service
 import pl.monochrome.manager.model.database.PlannedMessage
 import pl.monochrome.manager.model.dto.PlannedMessageDto
 import pl.monochrome.manager.repository.PlannedMessageRepository
+import java.time.LocalDateTime
 
 @Service
 class PlannedMessageService @Autowired constructor(
     private val repository: PlannedMessageRepository,
-    private val messageSchemeService: MessageSchemeService,
-    private val reservationService: ReservationService
+    private val messageSchemeService: MessageSchemeService
 ) {
+
+    @Autowired
+    private lateinit var reservationService: ReservationService
 
     fun getPlannedMessagesForReservation(reservationId: Int) = repository.findAllByReservationId(reservationId)
 
@@ -29,8 +32,11 @@ class PlannedMessageService @Autowired constructor(
 
     fun deletePlannedMessage(plannedMessageId: Int) = repository.deleteById(plannedMessageId)
 
+    fun getAllPlannedMessagesBetweenDates(startTime: LocalDateTime, endTime: LocalDateTime) =
+        repository.findAllBySendingTimeBetween(startTime, endTime)
+
     private fun dtoToObject(plannedMessageDto: PlannedMessageDto): PlannedMessage {
-        val messageScheme = messageSchemeService.getMessageScheme(plannedMessageDto.messageSchemeId)
+        val messageScheme = messageSchemeService.getMessageScheme(plannedMessageDto.messageSchemeId).get()
         val reservation = reservationService.getReservation(plannedMessageDto.reservationId)
         return PlannedMessage(
             plannedMessageDto.id,

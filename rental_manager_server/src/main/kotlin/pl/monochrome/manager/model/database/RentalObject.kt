@@ -18,8 +18,8 @@ data class RentalObject(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int,
 
-    @Column //(name = "max_guests")
-    val maxGuest: Int,
+    @Column
+    val maxGuests: Int,
 
     @Column
     val description: String,
@@ -32,9 +32,10 @@ data class RentalObject(
     @Type(type = "pgsql_enum")
     val type: ObjectType,
 
-    @Column //(name = "allowed_animals")
+    @Column
     val allowedAnimals: Boolean,
 
     @ManyToOne
-    val user: User?
+    val user: User
+
 )

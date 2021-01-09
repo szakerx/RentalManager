@@ -12,4 +12,8 @@ class PersonService @Autowired constructor(private val repository: PersonReposit
 
     fun addPerson(person: Person) = repository.save(person)
 
+    fun updatePerson(person: Person) = repository.save(person)
+
+    fun getPersonByMail(mail: String) = repository.findByMail(mail)
+
 }

@@ -10,11 +10,8 @@ import java.util.*
 @Service
 class UserService @Autowired constructor(private val repository: UserRepository) {
 
-    fun getAllUsers(): List<User> = repository.findAll()
-
-    fun deleteAllUsers() = repository.deleteAll()
-
-    fun add(user: User) = repository.save(user)
+    fun register(user: User) = repository.save(user)
 
     fun getUserById(userId: String) = repository.findById(userId).get()
+
 }

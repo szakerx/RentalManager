@@ -22,7 +22,6 @@ class GuestController @Autowired constructor(private val service: GuestService) 
     fun deleteGuest(@PathVariable personId: Int, @RequestParam userId: String) = service.deleteGuest(userId, personId)
 
     @GetMapping("/{personId}")
-    fun getGuest(@RequestParam("userId") userId: String, @PathVariable("personId") personId: Int) =
-        service.getGuest(userId, personId)
+    fun getGuest(@RequestParam userId: String, @PathVariable personId: Int) = service.getGuest(userId, personId)
 
 }

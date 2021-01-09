@@ -20,12 +20,21 @@ class GuestService @Autowired constructor(
     fun getGuest(userId: String, guestId: Int) = repository.findByIdOrNull(UserGuestKey(userId, guestId))
 
     fun addGuest(guestDto: GuestDto): Guest {
-        val guest = dtoToObject(guestDto)
-        return repository.save(guest)
+        val person = personService.getPersonByMail(guestDto.person.mail)
+        return if (person != null) {
+            val guest = dtoToObject(guestDto)
+            repository.save(guest)
+        } else {
+            val newPerson = personService.addPerson(guestDto.person)
+            guestDto.person = newPerson
+            val guest = dtoToObject(guestDto)
+            repository.save(guest)
+        }
     }
 
     fun updateGuest(guestDto: GuestDto): Guest {
         val guest = dtoToObject(guestDto)
+        personService.updatePerson(guestDto.person)
         return repository.save(guest)
     }
 
@@ -33,8 +42,8 @@ class GuestService @Autowired constructor(
 
     private fun dtoToObject(guestDto: GuestDto): Guest {
         val user = userService.getUserById(guestDto.userId)
-        val person = personService.getPerson(guestDto.personId)
-        val key = UserGuestKey(guestDto.userId, guestDto.personId)
+        val person = personService.getPerson(guestDto.person.id)
+        val key = UserGuestKey(guestDto.userId, guestDto.person.id)
         return Guest(key, user, person, guestDto.note)
     }
 

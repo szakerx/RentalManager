@@ -18,10 +18,10 @@ class MessageSchemeController @Autowired constructor(private val service: Messag
     @PutMapping
     fun updateMessageScheme(@RequestBody messageSchemeDto: MessageSchemeDto) = service.updateMessageScheme(messageSchemeDto)
 
-    @GetMapping("/{id}")
-    fun getMessageSchema(@PathVariable("id") messageSchemeId: Int) = service.getMessageScheme(messageSchemeId)
+    @GetMapping("/{messageSchemeId}")
+    fun getMessageSchema(@PathVariable messageSchemeId: Int) = service.getMessageScheme(messageSchemeId)
 
-    @DeleteMapping("/{id}")
-    fun deleteMessageScheme(@RequestBody messageSchemeDto: MessageSchemeDto) = service.deleteMessageScheme(messageSchemeDto)
+    @DeleteMapping("/{messageSchemeId}")
+    fun deleteMessageScheme(@PathVariable messageSchemeId: Int) = service.deleteMessageScheme(messageSchemeId)
 
 }

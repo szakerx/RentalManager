@@ -8,7 +8,7 @@ data class ReservationDto(
     val startDate: LocalDateTime,
     val endDate: LocalDateTime,
     val description: String?,
-    val guestCount: Int,
+    val guestsCount: Int,
     val childrenCount: Int,
     val price: BigDecimal,
     val personId: Int,

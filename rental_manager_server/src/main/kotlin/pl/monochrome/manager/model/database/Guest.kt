@@ -17,8 +17,9 @@ data class Guest(
         @ManyToOne
         @MapsId("personId")
         @JoinColumn(name = "person_id")
-        val person: Person,
+        var person: Person,
 
         @Column
         val note: String
+
 )
