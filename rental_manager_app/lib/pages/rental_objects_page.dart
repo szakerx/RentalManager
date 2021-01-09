@@ -44,7 +44,7 @@ class RentalObjectsPageState extends State<RentalObjectsPage> {
         TextEditingController(text: widget.rentalObject?.name ?? "");
     _descriptionController =
         TextEditingController(text: widget.rentalObject?.description ?? "");
-    _maxGuestsController = TextEditingController(text: widget.rentalObject?.maxGuests?.toString() ?? "01");
+    _maxGuestsController = TextEditingController(text: widget.rentalObject?.maxGuests?.toString() ?? "1");
     if (widget.rentalObject != null) {
       _selectedRentalObjectType = _rentalObjectTypes[widget.rentalObject?.type];
       _animalsAllowed = widget.rentalObject.allowedAnimals;

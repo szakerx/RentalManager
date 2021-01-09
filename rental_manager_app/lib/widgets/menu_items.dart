@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager_app/pages/guests_list_page.dart';
 import 'package:rental_manager_app/pages/home_page.dart';
+import 'package:rental_manager_app/pages/landing_page.dart';
 import 'package:rental_manager_app/pages/message_schemes_list_page.dart';
 import 'package:rental_manager_app/pages/rental_objects_list_page.dart';
 import 'package:rental_manager_app/pages/reservations_list_page.dart';
@@ -24,6 +25,7 @@ class MenuItemsState extends State<MenuItems> {
   Future<void> _signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LandingPage()));
     } catch (e) {
       print(e); // TODO: show dialog with error
     }

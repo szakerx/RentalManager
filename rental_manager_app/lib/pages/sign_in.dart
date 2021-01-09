@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rental_manager_app/model/remote.dart';
 import 'package:rental_manager_app/pages/landing_page.dart';
 import '../widgets/sign_in_form.dart';
+import 'package:rental_manager_app/model/user.dart' as model;
+
 
 class SignInPage extends StatelessWidget {
 
@@ -14,6 +17,7 @@ class SignInPage extends StatelessWidget {
           email: email,
           password: password
       );
+      Remote.postUser(model.User(id: userCredential.user.uid));
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LandingPage()));
 
     } on FirebaseAuthException catch (e) {

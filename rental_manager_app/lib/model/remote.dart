@@ -7,6 +7,7 @@ import 'package:rental_manager_app/model/message_scheme.dart';
 import 'package:rental_manager_app/model/planned_message.dart';
 import 'package:rental_manager_app/model/rental_object.dart';
 import 'package:rental_manager_app/model/reservation.dart';
+import 'package:rental_manager_app/model/user.dart' as model;
 import 'guest.dart';
 
 class Remote {
@@ -118,6 +119,25 @@ class Remote {
     return holidays;
   }
 
+  static Future<model.User> postUser(model.User user) async {
+    // return guest;
+    var queryParams = {
+      "userId": FirebaseAuth.instance.currentUser.uid,
+    };
+    var uri = Uri.http(serverUri, "/users", queryParams);
+
+    var body = user.toJson();
+
+    final response = await http.post(uri,
+        body: jsonEncode(body), headers: {"Content-Type": "application/json", "Authorization": "Bearer ${token()}"});
+
+    if (response.statusCode == 200) {
+      return model.User.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+    } else {
+      throw Exception('Nie udało się');
+    }
+  }
+
   static Future<List<Reservation>> getReservations() async {
     List<Reservation> reservations = List();
     var queryParams = {
@@ -125,7 +145,7 @@ class Remote {
     };
     var uri = Uri.http(serverUri, "/reservations", queryParams);
 
-    final response = await http.get(uri);
+    final response = await http.get(uri, headers: {"Authorization": "Bearer ${await token()}"});
 
     if (response.statusCode == 200) {
       List body = jsonDecode(utf8.decode(response.bodyBytes));
@@ -139,14 +159,16 @@ class Remote {
   }
   static Future<Reservation> postReservation(Reservation reservation) async {
     var queryParams = {
-      "userID": FirebaseAuth.instance.currentUser.uid,
+      "userId": FirebaseAuth.instance.currentUser.uid,
     };
     var uri = Uri.http(serverUri, "/reservations", queryParams);
 
     var body = reservation.toJson();
 
+    print(jsonEncode(body));
+
     final response = await http.post(uri,
-        body: jsonEncode(body), headers: {"Content-Type": "application/json"});
+        body: jsonEncode(body), headers: {"Content-Type": "application/json", "Authorization": "Bearer ${token()}"});
 
     print(response.statusCode);
     print(response.body);
@@ -158,11 +180,11 @@ class Remote {
   }
   static Future<String> deleteReservation(Reservation reservation) async {
     var queryParams = {
-      "userID": FirebaseAuth.instance.currentUser.uid,
+      "userId": FirebaseAuth.instance.currentUser.uid,
     };
     var uri = Uri.http(serverUri, "/reservations/${reservation.id}", queryParams);
 
-    final response = await http.delete(uri);
+    final response = await http.delete(uri, headers: {"Authorization": "Bearer ${await token()}"});
 
     print(response.statusCode);
     print(response.body);
@@ -180,7 +202,7 @@ class Remote {
     };
     var uri = Uri.http(serverUri, "/rentalobjects", queryParams);
 
-    final response = await http.get(uri);
+    final response = await http.get(uri, headers: {"Authorization": "Bearer ${await token()}"});
 
     if (response.statusCode == 200) {
       String bodyUtf = utf8.decode(response.bodyBytes);
@@ -195,14 +217,14 @@ class Remote {
   }
   static Future<RentalObject> postRentalObject(RentalObject object) async {
     var queryParams = {
-      "userID": FirebaseAuth.instance.currentUser.uid,
+      "userId": FirebaseAuth.instance.currentUser.uid,
     };
     var uri = Uri.http(serverUri, "/rentalobjects", queryParams);
 
     var body = object.toJson();
 
     final response = await http.post(uri,
-        body: jsonEncode(body), headers: {"Content-Type": "application/json"});
+        body: jsonEncode(body), headers: {"Content-Type": "application/json", "Authorization": "Bearer ${token()}"});
 
     if (response.statusCode == 200) {
       return RentalObject.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -212,11 +234,11 @@ class Remote {
   }
   static Future<String> deleteRentalObject(RentalObject object) async {
     var queryParams = {
-      "userID": FirebaseAuth.instance.currentUser.uid,
+      "userId": FirebaseAuth.instance.currentUser.uid,
     };
     var uri = Uri.http(serverUri, "/rentalobjects/${object.id}", queryParams);
 
-    final response = await http.delete(uri);
+    final response = await http.delete(uri, headers: {"Authorization": "Bearer ${await token()}"});
 
     if (response.statusCode == 200) {
       return "";
@@ -232,7 +254,7 @@ class Remote {
     };
     var uri = Uri.http(serverUri, "/guests", queryParams);
 
-    final response = await http.get(uri);
+    final response = await http.get(uri, headers: {"Authorization": "Bearer ${await token()}"});
 
     if (response.statusCode == 200) {
       String bodyUtf = utf8.decode(response.bodyBytes);
@@ -246,15 +268,38 @@ class Remote {
     return guests;
   }
   static Future<Guest> postGuest(Guest guest) async {
+    // return guest;
     var queryParams = {
-      "userID": FirebaseAuth.instance.currentUser.uid,
+      "userId": FirebaseAuth.instance.currentUser.uid,
     };
-    var uri = Uri.http(serverUri, "/rentalobjects", queryParams);
+    var uri = Uri.http(serverUri, "/guests", queryParams);
 
     var body = guest.toJson();
 
     final response = await http.post(uri,
+        body: jsonEncode(body), headers: {"Content-Type": "application/json", "Authorization": "Bearer ${token()}"});
+
+    if (response.statusCode == 200) {
+      return Guest.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+    } else {
+      throw Exception('Nie udało się');
+    }
+  }
+  static Future<Guest> putGuest(Guest guest) async {
+    // return guest;
+    var queryParams = {
+      "userId": FirebaseAuth.instance.currentUser.uid,
+    };
+    var uri = Uri.http(serverUri, "/guests", queryParams);
+
+    var body = guest.toJson();
+
+    print(jsonEncode(body));
+
+    final response = await http.put(uri,
         body: jsonEncode(body), headers: {"Content-Type": "application/json"});
+
+    print(response.body);
 
     if (response.statusCode == 200) {
       return Guest.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -263,12 +308,13 @@ class Remote {
     }
   }
   static Future<String> deleteGuest(Guest guest) async {
+    // return "";
     var queryParams = {
-      "userID": FirebaseAuth.instance.currentUser.uid,
+      "userId": FirebaseAuth.instance.currentUser.uid,
     };
-    var uri = Uri.http(serverUri, "/guests/${guest.id}", queryParams);
+    var uri = Uri.http(serverUri, "/guests/${guest.id.personId}", queryParams);
 
-    final response = await http.delete(uri);
+    final response = await http.delete(uri, headers: {"Authorization": "Bearer ${await token()}"});
 
     print(response.statusCode);
     print(response.body);
@@ -286,7 +332,7 @@ class Remote {
     };
     var uri = Uri.http(serverUri, "/schemes", queryParams);
 
-    final response = await http.get(uri);
+    final response = await http.get(uri, headers: {"Authorization": "Bearer ${await token()}"});
 
     if (response.statusCode == 200) {
       List body = jsonDecode(utf8.decode(response.bodyBytes));
@@ -300,14 +346,14 @@ class Remote {
   }
   static Future<MessageScheme> postMessageScheme(MessageScheme scheme) async {
     var queryParams = {
-      "userID": FirebaseAuth.instance.currentUser.uid,
+      "userId": FirebaseAuth.instance.currentUser.uid,
     };
     var uri = Uri.http(serverUri, "/schemes", queryParams);
 
     var body = scheme.toJson();
 
     final response = await http.post(uri,
-        body: jsonEncode(body), headers: {"Content-Type": "application/json"});
+        body: jsonEncode(body), headers: {"Content-Type": "application/json", "Authorization": "Bearer ${token()}"});
 
     print(response.statusCode);
     print(response.body);
@@ -319,11 +365,11 @@ class Remote {
   }
   static Future<String> deleteMessageScheme(MessageScheme scheme) async {
     var queryParams = {
-      "userID": FirebaseAuth.instance.currentUser.uid,
+      "userId": FirebaseAuth.instance.currentUser.uid,
     };
     var uri = Uri.http(serverUri, "/schemes/${scheme.id}", queryParams);
 
-    final response = await http.delete(uri);
+    final response = await http.delete(uri, headers: {"Authorization": "Bearer ${await token()}"});
 
     print(response.statusCode);
     print(response.body);
@@ -343,7 +389,7 @@ class Remote {
     };
     var uri = Uri.http(serverUri, "/plannedmessages", queryParams);
 
-    final response = await http.get(uri);
+    final response = await http.get(uri, headers: {"Authorization": "Bearer ${await token()}"});
 
     print(response.body);
     print(response.statusCode);
@@ -361,7 +407,7 @@ class Remote {
   }
   static Future<PlannedMessage> postPlannedMessage(PlannedMessage scheme) async {
     var queryParams = {
-      "userID": FirebaseAuth.instance.currentUser.uid,
+      "userId": FirebaseAuth.instance.currentUser.uid,
     };
     var uri = Uri.http(serverUri, "/plannedmessages", queryParams);
 
@@ -370,7 +416,7 @@ class Remote {
     print(body);
 
     final response = await http.post(uri,
-        body: jsonEncode(body), headers: {"Content-Type": "application/json"});
+        body: jsonEncode(body), headers: {"Content-Type": "application/json", "Authorization": "Bearer ${token()}"});
 
     print(response.statusCode);
     print(response.body);
@@ -382,11 +428,11 @@ class Remote {
   }
   static Future<String> deletePlannedMessage(PlannedMessage scheme) async {
     var queryParams = {
-      "userID": FirebaseAuth.instance.currentUser.uid,
+      "userId": FirebaseAuth.instance.currentUser.uid,
     };
     var uri = Uri.http(serverUri, "/plannedmessages/${scheme.id}", queryParams);
 
-    final response = await http.delete(uri);
+    final response = await http.delete(uri, headers: {"Authorization": "Bearer ${await token()}"});
 
     print(response.statusCode);
     print(response.body);
@@ -395,5 +441,10 @@ class Remote {
     } else {
       throw Exception('Nie udało się');
     }
+  }
+
+  static Future<String> token() async {
+    String result = await FirebaseAuth.instance.currentUser.getIdToken();
+    return result;
   }
 }

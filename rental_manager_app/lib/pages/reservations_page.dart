@@ -399,7 +399,7 @@ class ReservationsPageState extends State<ReservationsPage> {
         lastDate: DateTime(2101));
     if (picked != null)
       setState(() {
-        _selectedSinceDate = picked;
+        _selectedSinceDate = DateTime(picked.year, picked.month, picked.day);
         _sinceDateController.text = "${getFormattedDate(_selectedSinceDate)}";
         _plannedMessages.forEach((element) {
           element.sendingTime = getSendingTime(element);
@@ -415,7 +415,7 @@ class ReservationsPageState extends State<ReservationsPage> {
         lastDate: DateTime(2101));
     if (picked != null && picked != _selectedUntilDate)
       setState(() {
-        _selectedUntilDate = picked;
+        _selectedUntilDate = DateTime(picked.year, picked.month, picked.day);
         _untilDateController.text = "${getFormattedDate(_selectedUntilDate)}";
         _plannedMessages.forEach((element) {
           element.sendingTime = getSendingTime(element);
