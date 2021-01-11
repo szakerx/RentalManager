@@ -1,8 +1,5 @@
-import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager_app/widgets/calendar.dart';
-import 'package:rental_manager_app/widgets/custom_colors.dart';
 import 'package:rental_manager_app/widgets/filters_menu.dart';
 import 'package:rental_manager_app/widgets/side_menu.dart';
 

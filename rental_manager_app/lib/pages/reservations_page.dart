@@ -1,4 +1,5 @@
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart' as Firebase;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -225,6 +226,12 @@ class ReservationsPageState extends State<ReservationsPage> {
                   ),
                   TextFormField(
                     readOnly: !widget.isInEditMode,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Pole nie może być puste";
+                      }
+                      return null;
+                    },
                     controller: _priceController,
                     decoration: TextInputDecoration(labelText: "Cena")
                         .getInputDecoration(),
@@ -327,7 +334,7 @@ class ReservationsPageState extends State<ReservationsPage> {
                                       : widget.reservation.user);
                               Remote.postReservation(r).then((value) {
                                 _plannedMessages.forEach((element) {
-                                  element.reservation = r;
+                                  element.reservation = value;
                                   Remote.postPlannedMessage(element);
                                 });
                                 widget.parent.updateList();
@@ -399,7 +406,7 @@ class ReservationsPageState extends State<ReservationsPage> {
         lastDate: DateTime(2101));
     if (picked != null)
       setState(() {
-        _selectedSinceDate = picked;
+        _selectedSinceDate = DateTime(picked.year, picked.month, picked.day);
         _sinceDateController.text = "${getFormattedDate(_selectedSinceDate)}";
         _plannedMessages.forEach((element) {
           element.sendingTime = getSendingTime(element);
@@ -415,7 +422,7 @@ class ReservationsPageState extends State<ReservationsPage> {
         lastDate: DateTime(2101));
     if (picked != null && picked != _selectedUntilDate)
       setState(() {
-        _selectedUntilDate = picked;
+        _selectedUntilDate = DateTime(picked.year, picked.month, picked.day);
         _untilDateController.text = "${getFormattedDate(_selectedUntilDate)}";
         _plannedMessages.forEach((element) {
           element.sendingTime = getSendingTime(element);

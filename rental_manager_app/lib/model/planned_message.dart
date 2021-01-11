@@ -17,7 +17,7 @@ class PlannedMessage {
   PlannedMessage(
       {this.id,
       this.sendingTime,
-      this.target,
+      this.target = "EMAIL",
       this.messageScheme,
       this.reservation,
       this.isBefore,

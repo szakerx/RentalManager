@@ -26,6 +26,16 @@ class GuestsListState extends State<GuestsListPage> {
     _guests = Remote.getGuests().then((value) => _filteredGuests = value);
   }
 
+  void updateList() {
+    Remote.getGuests().then((value) {
+      setState(() {
+        searching = false;
+        _filteredGuests = value;
+        return value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Guest>>(
@@ -105,7 +115,7 @@ class GuestsListState extends State<GuestsListPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => GuestPage(isInEditMode: true,)));
+                                  builder: (context) => GuestPage(this, isInEditMode: true,)));
                         },
                         child: Icon(Icons.add)),
                   ],
@@ -120,7 +130,7 @@ class GuestsListState extends State<GuestsListPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => GuestPage(guest: snapshot.data[index],)));
+                                  builder: (context) => GuestPage(this, guest: snapshot.data[index],)));
                         },
                         title: Text(
                           "${_filteredGuests[index].person.name} ${_filteredGuests[index].person.surname}",
@@ -134,12 +144,7 @@ class GuestsListState extends State<GuestsListPage> {
                             minWidth: 50.0,
                             height: 50.0,
                             onPressed: () {
-                              //TODO usunac z bazy
-                              setState(() {
-                                searching = !searching;
-                                _filteredGuests.removeAt(index);
-                                snapshot.data.removeAt(index);
-                              });
+                              Remote.deleteGuest(_filteredGuests[index]).then((value) => updateList());
                             },
                             child: Icon(Icons.delete)),
                       );

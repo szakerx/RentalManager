@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:rental_manager_app/model/message_scheme.dart';
 import 'package:rental_manager_app/model/planned_message.dart';
 import 'package:rental_manager_app/model/remote.dart';
-import 'package:numberpicker/numberpicker.dart';
-import 'package:rental_manager_app/model/reservation.dart';
 import 'package:rental_manager_app/pages/reservations_page.dart';
 import 'package:rental_manager_app/widgets/text_input_decoration.dart';
 
