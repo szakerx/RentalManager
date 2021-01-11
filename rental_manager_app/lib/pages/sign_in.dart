@@ -60,8 +60,12 @@ class SignInPage extends StatelessWidget {
       appBar: AppBar(title: Text('Rental Manager')),
       body: Container(
         padding: EdgeInsets.all(30.0),
-        child: Center(
-          child: SigningForm(buttonFunction: signingFunction(), action: action,)
+        child: ListView(
+          children: [
+            Center(
+                child: SigningForm(buttonFunction: signingFunction(), action: action,)
+            )
+          ]
         )
       )
     );

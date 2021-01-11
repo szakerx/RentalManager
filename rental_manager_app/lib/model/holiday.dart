@@ -36,6 +36,19 @@ class Holiday {
         this.dateDay,
         this.weekDay});
 
-  factory Holiday.fromJson(Map<String, dynamic> json) => _$HolidayFromJson(json);
+  factory Holiday.fromJson(Map<String, dynamic> json) => Holiday(
+  name: json['name'] as String,
+      nameLocal: json['name_local'] as String,
+      language: json['language'] as String,
+      description: json['description'] as String,
+      country: json['country'] as String,
+      location: json['location'] as String,
+      type: json['type'] as String,
+      date: json['date'] as String,
+      dateYear: json['date_year'] as String,
+      dateMonth: json['date_month'] as String,
+      dateDay: json['date_day'] as String,
+      weekDay: json['week_day'] as String,
+  );
   Map<String, dynamic> toJson() => _$HolidayToJson(this);
 }

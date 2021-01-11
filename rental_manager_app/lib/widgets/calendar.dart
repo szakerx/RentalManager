@@ -51,9 +51,7 @@ class CalendarState extends State<Calendar> {
     super.initState();
     DateTime now = new DateTime.now();
     _selectedDay = DateTime(now.year, now.month, now.day);
-    _holidays = Remote.getHolidaysInRange(
-        DateTime(_selectedDay.year, _selectedDay.month, 1),
-        DateTime(_selectedDay.year, _selectedDay.month + 1, 0));
+    _holidays = Holidays().getHolidays();
     _reservations = Remote.getReservations().then((value) {
       _mappedReservations = mapReservations(value);
       return value;
