@@ -1,7 +1,5 @@
 package pl.monochrome.manager.controller
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import pl.monochrome.manager.model.dto.ReservationDto
@@ -20,10 +18,10 @@ class ReservationController @Autowired constructor(private val reservationServic
     @PutMapping
     fun updateReservation(@RequestBody reservationDto: ReservationDto) = reservationService.updateReservation(reservationDto)
 
-    @GetMapping("/{id}")
-    fun getReservation(@PathVariable id: Int) = reservationService.getReservation(id)
+    @GetMapping("/{reservationId}")
+    fun getReservation(@PathVariable reservationId: Int) = reservationService.getReservation(reservationId)
 
-    @DeleteMapping("/{id}")
-    fun deleteReservation(@PathVariable id: Int) = reservationService.deleteReservation(id)
+    @DeleteMapping("/{reservationId}")
+    fun deleteReservation(@PathVariable reservationId: Int) = reservationService.deleteReservation(reservationId)
 
 }
