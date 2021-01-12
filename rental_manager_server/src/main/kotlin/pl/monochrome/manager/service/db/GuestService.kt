@@ -21,6 +21,7 @@ class GuestService @Autowired constructor(
 
     fun addGuest(guestDto: GuestDto): Guest {
         val person = personService.getPersonByMail(guestDto.person.mail)
+        println("Person: $person")
         return if (person != null) {
             val guest = dtoToObject(guestDto)
             repository.save(guest)

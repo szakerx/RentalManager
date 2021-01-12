@@ -15,8 +15,8 @@ class SecurityConfiguration @Autowired constructor(private val environment: Envi
 
     override fun configure(http: HttpSecurity?) {
         http!!
-            .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .cors().and().csrf().disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .addFilterBefore(FirebaseAuthenticationFilter(environment), BasicAuthenticationFilter::class.java)
             .httpBasic().disable()
