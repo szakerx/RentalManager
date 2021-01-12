@@ -59,6 +59,7 @@ class Remote {
 
     var body = reservation.toJson();
 
+    print(queryParams);
     print(jsonEncode(body));
 
     final response = await http.post(uri,
