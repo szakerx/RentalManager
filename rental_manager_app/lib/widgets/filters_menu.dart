@@ -100,7 +100,7 @@ class FiltersMenuDrawerState extends State<FiltersMenuDrawer> {
     return Drawer(
         child: Container(
             padding: EdgeInsets.only(left: 20.0, right: 20.0),
-            child: Column(
+            child: ListView(
               children: [
                 Padding(padding: EdgeInsets.only(top: 45.0),),
                 Text("Filtrowanie", style: Theme.of(context).textTheme.headline1,),
@@ -148,7 +148,10 @@ class FiltersMenuDrawerState extends State<FiltersMenuDrawer> {
                                       Padding(padding: EdgeInsets.only(top: 10.0, right: 10.0)),
                                       ElevatedButton(
                                         onPressed: FiltersState.filtering ? () {
-                                          FiltersState.filtering = true;
+                                          setState(() {
+                                            FiltersState.filtering = true;
+
+                                          });
                                           widget.calendar.cancelFilteringReservations();
                                         } : null,
                                         child: Text("Zakończ"),

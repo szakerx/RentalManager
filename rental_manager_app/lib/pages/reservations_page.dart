@@ -11,6 +11,7 @@ import 'package:rental_manager_app/model/rental_object.dart';
 import 'package:rental_manager_app/model/reservation.dart';
 import 'package:rental_manager_app/model/user.dart';
 import 'package:rental_manager_app/pages/reservations_list_page.dart';
+import 'package:rental_manager_app/widgets/calendar.dart';
 import 'package:rental_manager_app/widgets/planned_message_dialog.dart';
 import 'package:rental_manager_app/widgets/text_input_decoration.dart';
 import 'package:rental_manager_app/widgets/text_with_icon.dart';
@@ -19,8 +20,9 @@ class ReservationsPage extends StatefulWidget {
   Reservation reservation;
   bool isInEditMode;
   ReservationsListState parent;
+  CalendarState calendar;
 
-  ReservationsPage({this.parent, this.reservation, this.isInEditMode = false});
+  ReservationsPage({this.parent, this.calendar, this.reservation, this.isInEditMode = false});
 
   @override
   State<StatefulWidget> createState() {
@@ -35,9 +37,9 @@ class ReservationsPageState extends State<ReservationsPage> {
   TextEditingController _childrenAmountController = TextEditingController();
   TextEditingController _priceController = TextEditingController();
   TextEditingController _sinceDateController = TextEditingController();
-  DateTime _selectedSinceDate = DateTime.now();
+  DateTime _selectedSinceDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   TextEditingController _untilDateController = TextEditingController();
-  DateTime _selectedUntilDate = DateTime.now();
+  DateTime _selectedUntilDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   Future<List<PlannedMessage>> _plannedMessagesFuture;
   List<PlannedMessage> _plannedMessages;
@@ -72,6 +74,8 @@ class ReservationsPageState extends State<ReservationsPage> {
           widget.reservation.childrenCount.toString();
       _sinceDateController.text =
           getFormattedDateFromString(widget.reservation.startDate);
+      _selectedSinceDate = DateTime.parse(widget.reservation.startDate);
+      _selectedUntilDate = DateTime.parse(widget.reservation.endDate);
       _untilDateController.text =
           getFormattedDateFromString(widget.reservation.endDate);
       _selectedGuest = widget.reservation.person == null
@@ -328,16 +332,15 @@ class ReservationsPageState extends State<ReservationsPage> {
                                           element.id.toString() ==
                                           _selectedRentalObject)
                                       .first,
-                                  user: widget.reservation == null
-                                      ? User(
-                                          id: Firebase.FirebaseAuth.instance.currentUser.uid)
-                                      : widget.reservation.user);
+                                  user: User(
+                                          id: Firebase.FirebaseAuth.instance.currentUser.uid));
                               Remote.postReservation(r).then((value) {
                                 _plannedMessages.forEach((element) {
                                   element.reservation = value;
                                   Remote.postPlannedMessage(element);
                                 });
-                                widget.parent.updateList();
+                                widget.calendar?.updateReservations();
+                                widget.parent?.updateList();
                                 Navigator.pop(context);
                               });
                             }

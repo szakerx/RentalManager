@@ -43,6 +43,7 @@ class CalendarState extends State<Calendar> {
   DateTime _selectedDay;
   Future<Map<DateTime, List<Holiday>>> _holidays;
   Future<List<Reservation>> _reservations;
+  Future<List<RentalObject>> _rentalObjects;
   Map<DateTime, List<Reservation>> _mappedReservations;
   Map<DateTime, List<Reservation>> _mappedReservationsBackup;
 
@@ -52,10 +53,11 @@ class CalendarState extends State<Calendar> {
     DateTime now = new DateTime.now();
     _selectedDay = DateTime(now.year, now.month, now.day);
     _holidays = Holidays().getHolidays();
+    _rentalObjects = Remote.getRentalObjects();
     _reservations = Remote.getReservations().then((value) {
-      _mappedReservations = mapReservations(value);
-      return value;
-    });
+        _mappedReservations = mapReservations(value);
+        return value;
+      });
   }
 
   Map<DateTime, List<Reservation>> mapReservations(
@@ -92,6 +94,15 @@ class CalendarState extends State<Calendar> {
     setState(() {
       FiltersState.filtering = false;
       _mappedReservations = _mappedReservationsBackup;
+    });
+  }
+
+  void updateReservations() {
+    setState(() {
+      _reservations = Remote.getReservations().then((value) {
+        _mappedReservations = mapReservations(value);
+        return value;
+      });
     });
   }
 
@@ -136,7 +147,7 @@ class CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Future.wait([_holidays, _reservations]),
+        future: Future.wait([_holidays, _reservations, _rentalObjects]),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Column(
@@ -203,9 +214,9 @@ class CalendarState extends State<Calendar> {
                     markersBuilder: (context, date, events, holidays) {
                       if (events.isNotEmpty) {
                         var _color;
-                        if (events.length == 1) _color = Colors.green[200];
-                        if (events.length > 1) _color = Colors.orange[200];
-                        if (events.length > 3) _color = Colors.red[200];
+                        if (events.length < snapshot.data[2].length / 2) _color = Colors.green[200];
+                        else if (events.length < snapshot.data[2].length) _color = Colors.orange[200];
+                        else if (events.length >= snapshot.data[2].length) _color = Colors.red[200];
                         return [
                           Align(
                             child: Container(
@@ -262,12 +273,13 @@ class CalendarState extends State<Calendar> {
                                           Navigator.of(context).push(MaterialPageRoute(
                                               builder: (context) =>
                                                   ReservationsPage(
+                                                    calendar: this,
                                                       isInEditMode: true,
                                                       reservation: Reservation(
                                                           startDate:
-                                                              _selectedDay
+                                                              DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day)
                                                                   .toString(),
-                                                          endDate: _selectedDay
+                                                          endDate: DateTime(_selectedDay.year, _selectedDay.month, _selectedDay.day)
                                                               .toString()))));
                                         },
                                       ),
