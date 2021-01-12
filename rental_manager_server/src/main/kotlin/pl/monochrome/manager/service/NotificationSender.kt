@@ -19,7 +19,7 @@ class NotificationSender @Autowired constructor(
 
     private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 
-    @Scheduled(fixedRateString = "PT1H")
+    @Scheduled(fixedRateString = "PT1M")
     fun sendMessages() {
 
         logger.info("Email service wake up.")
