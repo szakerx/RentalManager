@@ -123,13 +123,13 @@ class GuestPageState extends State<GuestPage> {
                         controller: _phoneController,
                         readOnly: !widget.isInEditMode,
                         validator: (value) {
-                          // Pattern p = r"(^(?:[+0]9)?[0-9]{10,12}$)";
-                          // RegExp regex = new RegExp(p);
-                          // if (!regex.hasMatch(value)) {
-                          //   return "Niepoprawny numer telefonu";
-                          // } else {
-                          //   return null;
-                          // }
+                          Pattern p = r'^(?:[+1-9][1-9][1-9])?[0-9]{9}$';
+                          RegExp regex = new RegExp(p);
+                          if (!regex.hasMatch(value)) {
+                            return "Niepoprawny numer telefonu";
+                          } else {
+                            return null;
+                          }
                           return null;
                         },
                         keyboardType: TextInputType.phone,

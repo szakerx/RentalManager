@@ -168,6 +168,14 @@ class ReservationsPageState extends State<ReservationsPage> {
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(0.0, 20.0, 10.0, 20.0),
                           child: TextFormField(
+                            validator: (value) {
+                              if (int.parse(value) > _rentalObjectsList
+                                  .where((element) =>
+                              element.id.toString() ==
+                                  _selectedRentalObject)?.first?.maxGuests || int.parse(value) < 0) {
+                                return "Za dużo gości";}
+                              return null;
+                            },
                               readOnly: !widget.isInEditMode,
                               controller: _guestsAmountController,
                               decoration:
@@ -178,6 +186,11 @@ class ReservationsPageState extends State<ReservationsPage> {
                       ),
                       Expanded(
                         child: TextFormField(
+                            validator: (value) {
+                              if (int.parse(value) < 0) {
+                                return "Za dużo gości";}
+                              return null;
+                            },
                             readOnly: !widget.isInEditMode,
                             controller: _childrenAmountController,
                             decoration:
