@@ -87,8 +87,10 @@ class FiltersMenuDrawerState extends State<FiltersMenuDrawer> {
   void initState() {
     super.initState();
     _rentalObjects = Remote.getRentalObjects().then((value) {
+      print("rental objects");
+      print(value);
       _rentalObjectsList = value;
-      if (FiltersState.checkedRentalObject == null) {
+      if (FiltersState.checkedRentalObject == null && value.length > 0) {
         FiltersState.checkedRentalObject = value.first.id.toString();
       }
       return value;
@@ -241,7 +243,6 @@ class FiltersMenuDrawerState extends State<FiltersMenuDrawer> {
                               && _sinceDateController.text.isNotEmpty
                               && _untilDateController.text.isNotEmpty
                           ) {
-                            //TODO idź do daty
                             showDialog(context: context,
                               builder: (context) {
                                return ReservationsDialog(_sinceDateController.text, _untilDateController.text, widget.calendar.getReservationsList(_selectedSinceDate, _selectedUntilDate), _rentalObjectsList);
