@@ -15,7 +15,7 @@ class HomePage extends StatelessWidget {
       drawer: SideMenuDrawer(),
       endDrawer: FiltersMenuDrawer(calendar),
       appBar: AppBar(
-        title: Text('Home Page'),
+        title: Text('Strona główna'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.filter_alt),

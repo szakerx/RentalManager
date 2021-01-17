@@ -26,7 +26,7 @@ class NotificationSender @Autowired constructor(
 
         val plannedMessages = plannedMessageService.getAllPlannedMessagesBetweenDates(
             LocalDateTime.now(),
-            LocalDateTime.now().plusHours(1L)
+            LocalDateTime.now().plusMinutes(1L)
         )
         plannedMessages.forEach { plannedMessage ->
             if (plannedMessage.target == Target.EMAIL || plannedMessage.target == Target.BOTH) {

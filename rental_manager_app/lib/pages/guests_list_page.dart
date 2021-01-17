@@ -27,13 +27,13 @@ class GuestsListState extends State<GuestsListPage> {
   }
 
   void updateList() {
-    Remote.getGuests().then((value) {
       setState(() {
         searching = false;
-        _filteredGuests = value;
-        return value;
+        _guests = Remote.getGuests().then((value) {
+          _filteredGuests = value;
+          return value;
+        });
       });
-    });
   }
 
   @override
