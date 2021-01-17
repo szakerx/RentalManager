@@ -25,6 +25,7 @@ class MenuItemsState extends State<MenuItems> {
   Future<void> _signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
+      SideMenuState.isHighlighted = [true, false, false, false, false];
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LandingPage()));
     } catch (e) {
       print(e); // TODO: show dialog with error
